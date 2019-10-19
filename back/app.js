@@ -17,9 +17,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookie('cookiesecret'));
 
 //db 실행 부분
-db.sequelize.sync( { } );
-
-
+//db.sequelize.sync( { } );
 
 app.get('/', (req, res)=>{
     res.status(200).send('Hello World');

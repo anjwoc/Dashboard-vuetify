@@ -13,7 +13,7 @@
           title="Edit Profile"
           text="Complete your profile"
         >
-          <v-form>
+          <v-form refs="form" v-model="valid" @submit.prevent="onSubmitForm">
             <v-container class="py-0">
               <v-row>
                 <v-col
@@ -21,8 +21,8 @@
                   md="4"
                 >
                   <v-text-field
-                    label="Company (disabled)"
-                    disabled
+                    label="Company & College"
+                    v-model="company"
                   />
                 </v-col>
 
@@ -33,6 +33,7 @@
                   <v-text-field
                     class="purple-input"
                     label="User Name"
+                    v-model="userName"
                   />
                 </v-col>
 
@@ -41,8 +42,9 @@
                   md="4"
                 >
                   <v-text-field
-                    label="Email Address"
+                    label="Email Address(이메일 주소)"
                     class="purple-input"
+                    v-model="email"
                   />
                 </v-col>
 
@@ -51,8 +53,9 @@
                   md="6"
                 >
                   <v-text-field
-                    label="First Name"
+                    label="First Name(이름)"
                     class="purple-input"
+                    v-model="firstName"
                   />
                 </v-col>
 
@@ -61,15 +64,17 @@
                   md="6"
                 >
                   <v-text-field
-                    label="Last Name"
+                    label="Last Name(성)"
                     class="purple-input"
+                    v-model="lastName"
                   />
                 </v-col>
 
                 <v-col cols="12">
                   <v-text-field
-                    label="Adress"
+                    label="Adress(주소)"
                     class="purple-input"
+                    v-model="address"
                   />
                 </v-col>
 
@@ -78,8 +83,9 @@
                   md="4"
                 >
                   <v-text-field
-                    label="City"
+                    label="City(도시)"
                     class="purple-input"
+                    v-model="city"
                   />
                 </v-col>
 
@@ -88,8 +94,9 @@
                   md="4"
                 >
                   <v-text-field
-                    label="Country"
+                    label="Country(국가)"
                     class="purple-input"
+                    v-model="country"
                   />
                 </v-col>
 
@@ -99,8 +106,9 @@
                 >
                   <v-text-field
                     class="purple-input"
-                    label="Postal Code"
+                    label="Postal Code(우편번호)"
                     type="number"
+                    v-model="postalCode"
                   />
                 </v-col>
 
@@ -108,7 +116,7 @@
                   <v-textarea
                     class="purple-input"
                     label="About Me"
-                    value="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                    v-model="aboutMe"
                   />
                 </v-col>
 
@@ -164,6 +172,57 @@
 
 <script>
   export default {
-  //
+    data(){
+      return {
+        valid:false,
+        company:'',
+        userName:'',
+        email:'',
+        firstName:'',
+        lastName:'',
+        address:'',
+        city:'',
+        country:'',
+        postalCode:'',
+        aboutMe:'',
+      }
+    },
+    methods: {
+      onSubmitForm(){
+        if(this.$refs.form.validate()){
+          this.$store.dispatch('users/updateProfile',{
+            company : this.company,
+            userName : this.userName,
+            email : this.email,
+            firstName : this.firstName,
+            lastName : this.lastName,
+            address : this.address,
+            city : this.city,
+            country : this.country,
+            postalCode : this.postalCode,
+            aboutMe : this.aboutMe,
+          })
+          .then(()=>{
+            this.company = '';
+            this.userName = '';
+            this.email = '';
+            this.firstName = '';
+            this.lastName = '';
+            this.address = '';
+            this.city = '';
+            this.country = '';
+            this.postalCode = '';
+            this.aboutMe = '';
+          })
+          .catch((err)=>{
+            console.error(err);
+          });
+        }
+      },
+      onChangeImages(e){
+
+      }
+
+    }
   }
 </script>
