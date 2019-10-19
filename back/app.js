@@ -4,8 +4,13 @@ const cors = require('cors');
 const session = require('express-session');
 const cookie = require('cookie-parser');
 const morgan = require('morgan');
-//const db = require('./models');
+const dotenv = require('dotenv');
+const db = require('./models');
 const app = express();
+
+dotenv.config();
+//db 실행 부분
+db.sequelize.sync( { } );
 
 app.use(morgan('dev'));
 app.use(cors({
@@ -16,8 +21,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookie('cookiesecret'));
 
-//db 실행 부분
-//db.sequelize.sync( { } );
+
 
 app.get('/', (req, res)=>{
     res.status(200).send('Hello World');
