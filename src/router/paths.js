@@ -10,6 +10,16 @@ export default [
     view: 'Dashboard'
   },
   {
+    path: '/login',
+    // Relative to /src/views
+    view: 'LoginForm'
+  },
+  {
+    path: '/dashboard',
+    // Relative to /src/views
+    view: 'Dashboard'
+  },
+  {
     path: '/user-profile',
     name: 'User Profile',
     view: 'UserProfile'
@@ -36,8 +46,8 @@ export default [
     view: 'Notifications'
   },
   {
-    path: '/upgrade',
-    name: 'Upgrade to PRO',
-    view: 'Upgrade'
+    path: '/SignUp',
+    name: 'SignUp',
+    view: 'SignUp'
   }
 ]

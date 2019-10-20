@@ -409,6 +409,8 @@
       complete (index) {
         this.list[index] = !this.list[index]
       }
-    }
+    },
+    middleware: 'authenticated',
+    
   }
 </script>

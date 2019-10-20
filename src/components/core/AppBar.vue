@@ -112,7 +112,7 @@
         'Another Notification',
         'Another One'
       ],
-      title: 'asdfasdfas',
+      title: 'title',
       responsive: false
     }),
 
@@ -129,9 +129,10 @@
     beforeDestroy () {
       window.removeEventListener('resize', this.onResponsiveInverted)
     },
-
-    methods: {
+    computed:{
       ...mapMutations('app', ['setDrawer', 'toggleDrawer']),
+    },
+    methods: {
       onClick () {
         this.setDrawer(!this.$store.state.app.drawer)
       },

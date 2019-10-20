@@ -9,6 +9,7 @@
 // Lib imports
 import Vue from 'vue'
 import Vuex from 'vuex'
+import axios from 'axios'
 
 // Store functionality
 import actions from './actions'
@@ -21,11 +22,11 @@ Vue.use(Vuex)
 
 // Create a new store
 const store = new Vuex.Store({
+  modules,
   actions,
   getters,
-  modules,
   mutations,
-  state
+  state,
 })
 
 export default store

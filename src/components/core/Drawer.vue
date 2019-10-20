@@ -28,7 +28,7 @@
       </v-list-item-avatar>
 
       <v-list-item-title class="title">
-        VUETIFY MD
+        DASHBOARD
       </v-list-item-title>
     </v-list-item>
 
@@ -55,14 +55,26 @@
     <template v-slot:append>
       <v-list nav>
         <v-list-item
-          to="/upgrade"
+          to="/Login"
         >
           <v-list-item-action>
             <v-icon>mdi-package-up</v-icon>
           </v-list-item-action>
 
           <v-list-item-title class="font-weight-light">
-            Upgrade To PRO
+            로그인
+          </v-list-item-title>
+        </v-list-item>
+
+        <v-list-item
+          to="/SignUp"
+        >
+          <v-list-item-action>
+            <v-icon>mdi-package-up</v-icon>
+          </v-list-item-action>
+
+          <v-list-item-title class="font-weight-light">
+            회원가입
           </v-list-item-title>
         </v-list-item>
       </v-list>
@@ -73,6 +85,7 @@
 <script>
 // Utilities
   import {
+    mapActions,
     mapMutations,
     mapState
   } from 'vuex'
@@ -87,7 +100,7 @@
     data: () => ({
       links: [
         {
-          to: '/',
+          to: '/dashboard',
           icon: 'mdi-view-dashboard',
           text: 'Dashboard'
         },
