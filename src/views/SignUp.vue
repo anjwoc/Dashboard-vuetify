@@ -34,6 +34,7 @@
                   <v-text-field
                     label="비밀번호"
                     class="purple-input"
+                    type="password"
                     :rules="passwordRules"
                     v-model="password"
                   />
@@ -41,6 +42,7 @@
                 <v-col cols="12">
                   <v-text-field
                     label="비밀번호 확인"
+                    type="password"
                     class="purple-input"
                     :rules="passwordCheckRules"
                   />
@@ -103,8 +105,10 @@ export default {
     }),
     ...mapActions('users',{
       signUp: 'signUp',
-
     }),
+    ...mapMutations('users',{
+      'setMe': 'setMe'
+    })
   },
   watch: {
     me(val){
@@ -124,7 +128,7 @@ export default {
           password: this.password,
           aboutme: this.aboutme
         })
-        .then(()=>{
+        .then((res)=>{
           console.log("진입");
           this.$router.push({
             path: '/',

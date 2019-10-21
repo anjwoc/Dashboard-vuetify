@@ -55,6 +55,7 @@
     <template v-slot:append>
       <v-list nav>
         <v-list-item
+          v-if="!me"
           to="/Login"
         >
           <v-list-item-action>
@@ -66,7 +67,9 @@
           </v-list-item-title>
         </v-list-item>
 
+
         <v-list-item
+          v-if="!me"
           to="/SignUp"
         >
           <v-list-item-action>
@@ -139,6 +142,9 @@
 
     computed: {
       ...mapState('app', ['image', 'color']),
+      ...mapState({
+        'me': state=>state.users.me,
+      }),
       inputValue: {
         get () {
           return this.$store.state.app.drawer
@@ -150,7 +156,8 @@
     },
 
     methods: {
-      ...mapMutations('app', ['setDrawer', 'toggleDrawer'])
+      ...mapMutations('app', ['setDrawer', 'toggleDrawer']),
+
     }
   }
 </script>

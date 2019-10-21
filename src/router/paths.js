@@ -3,11 +3,35 @@
  * for more information on routes, see the
  * official documentation https://router.vuejs.org/en/
  */
+import Cookies from 'js-cookie'
+const requireAuth = () => (from, to, next) => {
+  const isAuthenticated = false
+  if (isAuthenticated) return next()
+  next('/login?returnPath=me')
+}
+
 export default [
+  
   {
     path: '',
     // Relative to /src/views
-    view: 'Dashboard'
+    view: 'LoginForm',
+    beforeEnter(to, from, next){
+      if(Cookies.get('token')){
+        console.log("진입")
+        if(to.path === '/login'){
+          next({ path: '/dashboard'})
+        }else{
+          next()
+        }
+      }else{
+        if(to.path !== '/login'){
+          next({ path:'/login' })
+        }else{
+          next()
+        }
+      }
+    },
   },
   {
     path: '/login',

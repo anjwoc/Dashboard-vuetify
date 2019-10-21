@@ -83,15 +83,28 @@
             </v-list>
           </v-card>
         </v-menu>
+        
+        <v-btn
+          v-if="me"
+          @click="onLogOut"
+          icon
+        >
+          <v-icon color="tertiary">
+            mdi-account-off
+          </v-icon>
+        </v-btn>
 
         <v-btn
-          to="/user-profile"
+          v-if="!me"
+          to="/login"
           icon
         >
           <v-icon color="tertiary">
             mdi-account
           </v-icon>
         </v-btn>
+
+
       </v-row>
     </v-toolbar-items>
   </v-app-bar>
@@ -100,7 +113,9 @@
 <script>
   // Utilities
   import {
-    mapMutations
+    mapState,
+    mapMutations,
+    mapActions,
   } from 'vuex'
 
   export default {
@@ -130,6 +145,7 @@
       window.removeEventListener('resize', this.onResponsiveInverted)
     },
     computed:{
+      ...mapState({ 'me': state => state.users.me }),
       ...mapMutations('app', ['setDrawer', 'toggleDrawer']),
     },
     methods: {
@@ -142,7 +158,16 @@
         } else {
           this.responsive = false
         }
-      }
+      },
+      onLogOut() {
+          this.$store.dispatch('users/logOut')
+          .then(()=>{
+            this.$router.push('/')
+          })
+          .catch(err=>{
+            console.error(err);
+          })
+      },
     }
   }
 </script>

@@ -1,12 +1,18 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
+
 const db = require('../models');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 
 const router = express.Router();
 
-router.post('/', async (req, res, next) => { // 회원가입
+router.get('/', isLoggedIn, async(req, res, next)=>{
+  const user = req.user;
+  res.json(user);
+});
+
+router.post('/', isNotLoggedIn, async (req, res, next) => { // 회원가입
     try {
       const hash = await bcrypt.hash(req.body.password, 12);
       const exUser = await db.User.findOne({
@@ -34,7 +40,7 @@ router.post('/', async (req, res, next) => { // 회원가입
         if (info) {
           return res.status(401).send(info.reason);
         }
-        return req.login(user, async (err) => { // 세션에다 사용자 정보 저장 (어떻게? serializeUser)
+        return req.login(user, async (err) => { 
           if (err) {
             console.error(err);
             return next(err);
@@ -52,7 +58,7 @@ router.post('/', async (req, res, next) => { // 회원가입
     }
   });
 
-router.post('/login', (req, res, next) => {
+router.post('/login', isNotLoggedIn, (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
       if (err) {
         console.error(err);
@@ -61,7 +67,7 @@ router.post('/login', (req, res, next) => {
       if (info) {
         return res.status(401).send(info.reason);
       }
-      return req.login(user, async (err) => { // 세션에다 사용자 정보 저장 (어떻게? serializeUser)
+      return req.login(user, async (err) => { 
         if (err) {
           console.error(err);
           return next(err);
@@ -75,5 +81,12 @@ router.post('/login', (req, res, next) => {
     })(req, res, next);
 });
 
+router.post('/logout', isLoggedIn, (req, res)=>{
+  if(req.isAuthenticated()){
+    req.logout();
+    req.session.destroy();
+    return res.status(200).send('로그아웃 되었습니다');
+  }
+})
 
 module.exports = router;

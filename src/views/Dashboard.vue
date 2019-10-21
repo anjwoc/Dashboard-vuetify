@@ -252,7 +252,13 @@
 
 </template>
 
-<script>
+  <script>
+  import {
+      mapState,
+      mapMutations,
+      mapActions,
+  }from 'vuex';
+
   export default {
     data () {
       return {
@@ -405,12 +411,24 @@
         }
       }
     },
+    computed:{
+      ...mapState({me : state=>state.state.users.me}),
+      ...mapActions('users', {
+        serverInit: 'serverInit'
+      })
+    },
+    created() {
+      this.load()
+    },
     methods: {
       complete (index) {
         this.list[index] = !this.list[index]
+      },
+      load(){
+        this.$store.dispatch('users/serverInit');
+        
       }
-    },
-    middleware: 'authenticated',
+    }
     
   }
 </script>

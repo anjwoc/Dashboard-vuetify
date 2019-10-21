@@ -10,7 +10,7 @@
           color="primary"
           title="Login"
         >
-          <v-form refs="form" v-model="valid" @submit.prevent="onSubmitForm">
+          <v-form ref="form" v-model="valid" @submit.prevent="onSubmitForm">
             <v-container class="py-0">
               <v-row>
                 <v-col cols="12">
@@ -18,13 +18,14 @@
                     label="Login"
                     class="purple-input"
                     prepend-icon="person"
-                    :rules="nicknameRules"
+                    :rules="emailRules"
                     v-model="email"
                   />
                 </v-col>
                 <v-col cols="12">
                   <v-text-field
                     label="Password"
+                    type="password"
                     class="purple-input"
                     prepend-icon="lock"
                     :rules="passwordRules"
@@ -55,6 +56,7 @@
 </template>
 <script>
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
+import Cookies from 'js-cookie'
 import {
     mapState,
     mapMutations,
@@ -77,14 +79,26 @@ export default {
         }
     },
     computed: {
-        ...mapState['me'],
-        ...mapActions['logIn', 'logOut'],
+        ...mapState({
+          me: state => state.users.me
+        }),
+        ...mapActions('users', {
+          logIn: 'logIn',
+          serverInit: 'serverInit'
+        }),
+        ...mapMutations('users',{
+          setMe: 'setMe'
+        })
+    },
+    created() {
+      this.load()
     },
     watch: {
         me(val){
+            console.log(val);
             if(val){
                 this.$router.push({
-                    path: '/',
+                    path: '/dashboard',
                 });
             }
         }
@@ -92,15 +106,26 @@ export default {
     methods: {
         onSubmitForm(){
             if(this.$refs.form.validate()){
-                this.$store.dispatch('/logIn',{
+                this.$store.dispatch('users/logIn',{
                     email: this.email,
                     password: this.password
+                })
+                .then(res=>{
+                  let token = res.data.id;
+                  localStorage.setItem("access_token", token);
+                  Cookies.set('token', token, {expires: 60*60})
+                  this.$router.push('/dashboard');
+                  console.log("res.data.id")
+                  console.log(res.data.id);
+                })
+                .catch((e)=>{
+                  console.error(e);
                 });
             }
         },
-        onLogOut() {
-            this.$store.dispatch('/logOut');
-        },
+        load(){
+          this.$store.dispatch('users/serverInit');
+        }
     },
 
 }
