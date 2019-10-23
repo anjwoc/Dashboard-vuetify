@@ -46,7 +46,6 @@ export default {
           withCredentials: true,
         })
           .then((res)=>{
-            let token = 
             commit('setMe', res.data);
           })
           .catch((e)=>{
@@ -73,7 +72,55 @@ export default {
           commit('setMe', res.data); 
         }catch(err){
           console.error(err);
+        };
+      },
+      async loadDB_24({commit}, payload){
+        try{
+          res = await axios.get('http://localhost:3085/sensor/24h',{
+            withCredentials: true
+          });
+          commit('setTwentyFour', res);
+        }catch(err){
+          console.error(err);
+        };
+      },
+      async totalItem({commit}, payload){
+        try{
+          res = await axios.get('http://localhost:3085/sensor/24h',{
+            withCredentials:true
+          });
+          commit('setTableItem', res.data);
+        }catch(err){
+          console.error(err);
         }
+      },
+      async prevTotalUsage_24({commit}, payload){
+        //지난 24시간 총계
+        try{
+          let mac = [];
+          let mA = [];
+          res = await axios.get('http://localhost:3085/sensor/sum_24h',{
+            withCredentials: true
+          })
+          .then((res)=>{
+            res.forEach((val)=>{
+              mac.push(val["mac"]);
+              mA.push(val["mA"]);
+            });
+          })
+          .catch(err=>{
+            console.error(err);
+          });
+          commit('setMac', mac);
+          commit('setMA', mA);
+        }catch(err){
+          console.error(err);
+
+        }
+
       }
+
+
+
 
 }

@@ -50,8 +50,6 @@ app.use('/sensor', sensorRouter);
 io.on('connection', (socket)=>{
   console.log('user connected');
 
-  
-
 });
 
 server.listen(3085, ()=>{

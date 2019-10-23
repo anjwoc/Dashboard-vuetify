@@ -73,5 +73,11 @@ export default [
     path: '/SignUp',
     name: 'SignUp',
     view: 'SignUp'
-  }
+  },
+  {
+    path: '/test',
+    name: 'test',
+    view: 'test'
+  },
+  
 ]

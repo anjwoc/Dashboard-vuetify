@@ -108,12 +108,11 @@ export default {
                     password: this.password
                 })
                 .then(res=>{
+                  console.log(res);
                   let token = res.data.id;
                   localStorage.setItem("access_token", token);
                   Cookies.set('token', token, {expires: 60*60})
                   this.$router.push('/dashboard');
-                  console.log("res.data.id")
-                  console.log(res.data.id);
                 })
                 .catch((e)=>{
                   console.error(e);
