@@ -262,6 +262,7 @@
   export default {
     data () {
       return {
+        fee: 0.0,
         dailySalesChart: {
           data: {
             labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
@@ -412,20 +413,16 @@
       }
     },
     computed:{
-      ...mapState({me : state=>state.state.users.me}),
+      ...mapState({me : state=>state.users.me}),
       ...mapActions('users', {
         serverInit: 'serverInit'
       })
-    },
-    created() {
-      this.load()
     },
     methods: {
       complete (index) {
         this.list[index] = !this.list[index]
       },
-      load(){
-        this.$store.dispatch('users/serverInit');
+      getElectricFee(total){
         
       }
     }

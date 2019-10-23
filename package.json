@@ -15,6 +15,7 @@
     "core-js": "^2.6.5",
     "js-cookie": "^2.2.1",
     "material-design-icons-iconfont": "^5.0.1",
+    "timeseries-analysis": "^1.0.12",
     "vue": "^2.6.10",
     "vue-analytics": "^5.17.0",
     "vue-chartist": "^2.2.1",

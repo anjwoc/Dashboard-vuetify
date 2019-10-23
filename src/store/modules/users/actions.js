@@ -74,11 +74,6 @@ export default {
         }catch(err){
           console.error(err);
         }
-      },
-      serverInit({dispatch}, {req}){
-        if(req.cookies[connect.sid]){
-          return dispatch('loadUser');
-        }  
       }
 
 }

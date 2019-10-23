@@ -8,7 +8,11 @@ const dotenv = require('dotenv');
 const db = require('./models');
 const passportConfig = require('./passport');
 const userRouter = require('./routes/user');
+const sensorRouter = require('./routes/sensor');
 const app = express();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
+
 
 dotenv.config();
 //db 실행 부분
@@ -41,7 +45,15 @@ app.get('/', (req, res)=>{
 });
 
 app.use('/user', userRouter);
+app.use('/sensor', sensorRouter);
 
-app.listen(3085, ()=>{
+io.on('connection', (socket)=>{
+  console.log('user connected');
+
+  
+
+});
+
+server.listen(3085, ()=>{
     console.log(`Backend Server is Listening on port ${3085}`);
 });

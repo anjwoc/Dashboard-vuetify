@@ -90,9 +90,6 @@ export default {
           setMe: 'setMe'
         })
     },
-    created() {
-      this.load()
-    },
     watch: {
         me(val){
             console.log(val);
@@ -122,9 +119,6 @@ export default {
                   console.error(e);
                 });
             }
-        },
-        load(){
-          this.$store.dispatch('users/serverInit');
         }
     },
 
