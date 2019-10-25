@@ -4,7 +4,7 @@
 
       <v-col
         cols="12"
-        lg="6"
+        lg="12"
       >
         <material-chart-card
           :data="realTimeChartChart.data"
@@ -34,7 +34,7 @@
 
       <v-col
         cols="12"
-        lg="6"
+        lg="4"
       >
         <material-chart-card
           :data="totalUsageDayChart.data"
@@ -73,7 +73,7 @@
       <!-- 여기 수정해야됌 -->
       <v-col
         cols="12"
-        lg="6"
+        lg="4"
       >
         <material-chart-card
           :data="totalUsageDayChart.data"
@@ -110,7 +110,7 @@
 
       <v-col
         cols="12"
-        lg="6"
+        lg="4"
       >
         <material-chart-card
           :data="totalUsageEachNodeChart.data"
@@ -143,37 +143,38 @@
       <v-col
         cols="12"
         sm="6"
-        lg="3"
+        lg="6"
       >
         <material-stats-card
           color="green"
           icon="mdi-power-plug"
-          title="Usage"
-          value="$34,245(전기)"
-          sub-icon="mdi-calendar"
-          sub-text="Last month's usage"
-        />
+          title="Real-time electric Fee"
+          v-model="this.fee"
+          sub-icon="mdi-square-inc-cash"
+          sub-text="이번 달 전기요금(누적)"
+        >
+        </material-stats-card>
       </v-col>
 
       <v-col
         cols="12"
         sm="6"
-        lg="3"
+        lg="6"
       >
         <material-stats-card
           color="orange"
-          icon="mdi-content-copy"
-          title="Used Space"
-          value="49/50"
-          small-value="GB"
-          sub-icon="mdi-alert"
+          icon="mdi-flash"
+          title="electricity usage"
+          v-model="this.totalUsage_mA"
+          small-value="mA"
+          sub-icon="mdi-flash"
           sub-icon-color="error"
-          sub-text="Get More Space..."
+          sub-text="일일 누적 전기 사용량"
           sub-text-color="text-primary"
         />
       </v-col>
 
-      <v-col
+      <!-- <v-col
         cols="12"
         sm="6"
         lg="3"
@@ -201,62 +202,9 @@
           sub-icon="mdi-update"
           sub-text="Just Updated"
         />
-      </v-col>
+      </v-col> -->
 
-      <v-col cols="12" lg="6">
-        <!-- 저번 달 차트 -->
-        <material-chart-card
-          type="Line"
-          color="primary"
-
-        >
-
-        </material-chart-card>
-
-      </v-col>
-      <v-col  cols="12" lg="6">
-        <!-- 이번 달 차트 -->
-        <material-stats-card
-          color="green"
-          icon="mdi-power-plug"
-          title="Usage"
-          value="$34,245(전기)"
-          sub-icon="mdi-calendar"
-          sub-text="Last month's usage"
-        />
-        
-
-      </v-col>
-
-      <v-col
-        cols="12"
-        sm="12"
-        lg="6"
-      >
-        <material-chart-card
-          type="Line"
-          color="primary"
-
-        >
-
-        </material-chart-card>
-      </v-col>
-      
-      <v-col
-        cols="12"
-        sm="12"
-        lg="6"
-      >
-        <material-stats-card
-          color="green"
-          icon="mdi-power-plug"
-          title="Usage"
-          value="$34,245(전기)"
-          sub-icon="mdi-calendar"
-          sub-text="Last month's usage"
-        />
-      </v-col>
-
+     
       <v-col
         cols="12"
         lg="6"
@@ -306,7 +254,9 @@
   export default {
     data () {
       return {
-        fee: 0.0,
+        fee: 0,
+        electricityUsage: 0,
+        totalUsage_mA: 0,
         totalUsageDayChart: {
           data: {
             labels: [],
@@ -462,14 +412,17 @@
       },
     },
     sockets:{
-      connect(){
-        console.log('connected to websocket server!');
-      },
       realtimeChartLabels(labels) {
         this.realTimeChartChart.data['labels'] = labels;
       },
       realtimeChartSeries(series){
         this.realTimeChartChart.data['series'][0] = series;
+      },
+      electricFee(fee){
+        this.fee = "￦"+fee;
+      },
+      totalUsage(usage){
+        this.totalUsage_mA = usage;
       }
     }
     

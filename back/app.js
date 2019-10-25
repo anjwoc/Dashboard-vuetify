@@ -52,41 +52,79 @@ server.listen(3085, ()=>{
     console.log(`Backend Server is Listening on port ${3085}`);
 });
 
+const getEletricFee = (total) => {
+  //전기요금 계산 공식
+  let fee = 0;
+  let cnt = parseInt(total/200);
+  if(cnt == 0){
+    fee = (total-200)*93.3 + 910;
+  }
+  else if(cnt >= 1){
+    fee = 200*93.3 + ((total-200)*187.9) + 1600;
+  }else{
+    fee = (200*187.9) + (200*93.3) + ((total-200)*280.6) + 7300;
+  }
+  //부가 가치세 & 전력 기금
+  fee = fee + (fee*0.1) + (fee*0.037);
+  fee -= fee%10; // 10원 미만 절사
+  //TV보유시 청구 요금 2500원 추가
+
+  return fee;
+};
+
 io.sockets.on('connection', function(socket){
   socket.interval = setInterval(() => {
     try{
         let realtimeChartSeries = new Array();
         let realtimeChartLabels = new Array();
+        let electricFee = 0;
+        let totalUsage = 0;
+        const sql = "select CONCAT(HOUR(insertedAt), '시', MINUTE(insertedAt), '분') AS time, mA from sensor where insertedAt > DATE_SUB(now(), INTERVAL 8 MINUTE) LIMIT 8; "
+              +"select SUM(mA) AS mA from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 MONTH);"
+              +"select SUM(mA) AS mA from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 DAY)";
         //DB 연동해서 DB로부터 센서값 조회
         const con = mysql.createConnection({
             host: 'anjwoc.iptime.org',
             port: 3306,
             user: 'root',
             password: '1234',
-            database: 'test'
+            database: 'test',
+            multipleStatements: true,
         });
         con.connect();
-        con.query("select CONCAT(HOUR(insertedAt), '시', MINUTE(insertedAt), '분') AS time, mA from sensor where insertedAt > DATE_SUB(now(), INTERVAL 8 MINUTE) LIMIT 8;",(err, rows, fields)=>{
+        con.query(sql,(err, rows, fields)=>{
             if(!err){
                 console.log('The solution is: ', rows);
-                for(let i=0;i<rows.length;i++){
-                  realtimeChartLabels.push(rows[i]['time']);
-                  realtimeChartSeries.push(rows[i]['mA']);
+                const realtime = rows[0]; // 
+                electricFee = getEletricFee(rows[1][0]['mA']);
+                totalUsage = rows[2][0]['mA'];
+                console.log("------------electricFee----------");
+                console.log(electricFee);
+                console.log("------------totalUsage----------");
+                console.log(totalUsage);
+                for(let i=0;i<rows[0].length;i++){
+                  realtimeChartLabels.push(realtime[i]['time']);
+                  realtimeChartSeries.push(realtime[i]['mA']);
                 }
+
                 io.emit('realtimeChartLabels', realtimeChartLabels);
                 io.emit('realtimeChartSeries', realtimeChartSeries);
+                io.emit('electricFee', electricFee);
+                io.emit('totalUsage', totalUsage);
             } 
             else
                 console.log('Error while performing Query. ', err);
         });
+        
+
         con.end();
         
     }catch(err){
         console.error(err);
         return next(err);
     };
-  }, 60000);
-  
+  }, 1000);
+
 
 
 });
