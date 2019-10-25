@@ -7,8 +7,8 @@
         lg="6"
       >
         <material-chart-card
-          :data="dataCompletedTasksChart.data"
-          :options="dataCompletedTasksChart.options"
+          :data="realTimeChartChart.data"
+          :options="realTimeChartChart.options"
           color="green"
           type="Line"
         >
@@ -26,12 +26,51 @@
             >
               mdi-clock-outline
             </v-icon>
-            <span class="caption grey--text font-weight-light">campaign sent 26 minutes ago</span>
+            <span class="caption grey--text font-weight-light">updated 1 minutes ago</span>
           </template>
         </material-chart-card>
       </v-col>
 
 
+      <v-col
+        cols="12"
+        lg="6"
+      >
+        <material-chart-card
+          :data="totalUsageDayChart.data"
+          :options="totalUsageDayChart.options"
+          color="info"
+          type="Line"
+        >
+          <h4 class="title font-weight-light">
+            Total Usage by Day of the Month
+          </h4>
+
+          <p class="category d-inline-flex font-weight-light">
+            <v-icon
+              color="green"
+              small
+            >
+              mdi-arrow-up
+            </v-icon>
+            <span class="green--text">55% 어제 사용량과의 차이를 퍼센트를 computed에서 계산해서 넣고</span>&nbsp;
+            increase in today's sales(v-if로 increase인지 decrease인지 구분)
+          </p>
+
+          <template v-slot:actions>
+            <v-icon
+              class="mr-2"
+              small
+            >
+              mdi-clock-outline
+            </v-icon>
+            <span class="caption grey--text font-weight-light">updated 4(이 숫자는 데이터 넘길때 타임스태프 찍어서 서로 시간차이 구해서넣고) minutes ago</span>
+          </template>
+        </material-chart-card>
+      </v-col>
+
+
+      <!-- 여기 수정해야됌 -->
       <v-col
         cols="12"
         lg="6"
@@ -289,11 +328,11 @@
             }
           }
         },
-        dataCompletedTasksChart: {
+        realTimeChartChart: {
           data: {
-            labels: ['12am', '3pm', '6pm', '9pm', '12pm', '3am', '6am', '9am'],
+            labels: [],
             series: [
-              [230, 750, 450, 300, 280, 240, 200, 190]
+              []
             ]
           },
           options: {
@@ -301,12 +340,12 @@
               tension: 0
             }),
             low: 0,
-            high: 1000, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+            high: 100, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
             chartPadding: {
               top: 0,
-              right: 0,
-              bottom: 0,
-              left: 0
+              right: 5,
+              bottom: 5,
+              left: 5
             }
           }
         },
@@ -322,7 +361,7 @@
               showGrid: false
             },
             low: 0,
-            high: 1000,
+            high: 1200,
             chartPadding: {
               top: 0,
               right: 5,
@@ -415,14 +454,23 @@
       .catch((e)=>{
         console.error(e);
       });
-
+      
     },
     methods: {
       complete (index) {
         this.list[index] = !this.list[index]
       },
-
-
+    },
+    sockets:{
+      connect(){
+        console.log('connected to websocket server!');
+      },
+      realtimeChartLabels(labels) {
+        this.realTimeChartChart.data['labels'] = labels;
+      },
+      realtimeChartSeries(series){
+        this.realTimeChartChart.data['series'][0] = series;
+      }
     }
     
   }
