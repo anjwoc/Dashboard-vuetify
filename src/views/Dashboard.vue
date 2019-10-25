@@ -1,17 +1,49 @@
 <template>
   <v-container fluid>
     <v-row>
+
       <v-col
         cols="12"
+        lg="6"
       >
         <material-chart-card
-          :data="dailySalesChart.data"
-          :options="dailySalesChart.options"
+          :data="dataCompletedTasksChart.data"
+          :options="dataCompletedTasksChart.options"
+          color="green"
+          type="Line"
+        >
+          <h3 class="title font-weight-light">
+            Completed Tasks(당일 00시 부터 누적사용량 최대 9시간 까지 표현되는)
+          </h3>
+          <p class="category d-inline-flex font-weight-light">
+            Last Last Campaign Performance
+          </p>
+
+          <template v-slot:actions>
+            <v-icon
+              class="mr-2"
+              small
+            >
+              mdi-clock-outline
+            </v-icon>
+            <span class="caption grey--text font-weight-light">campaign sent 26 minutes ago</span>
+          </template>
+        </material-chart-card>
+      </v-col>
+
+
+      <v-col
+        cols="12"
+        lg="6"
+      >
+        <material-chart-card
+          :data="totalUsageDayChart.data"
+          :options="totalUsageDayChart.options"
           color="info"
           type="Line"
         >
           <h4 class="title font-weight-light">
-            Daily Usage
+            Total Usage by Day of the Month
           </h4>
 
           <p class="category d-inline-flex font-weight-light">
@@ -42,17 +74,17 @@
         lg="6"
       >
         <material-chart-card
-          :data="emailsSubscriptionChart.data"
-          :options="emailsSubscriptionChart.options"
-          :responsive-options="emailsSubscriptionChart.responsiveOptions"
+          :data="totalUsageEachNodeChart.data"
+          :options="totalUsageEachNodeChart.options"
+          :responsive-options="totalUsageEachNodeChart.responsiveOptions"
           color="red"
           type="Bar"
         >
           <h4 class="title font-weight-light">
-            Email Subscription
+            Total Usage for Each Node
           </h4>
           <p class="category d-inline-flex font-weight-light">
-            Last Campaign Performance
+            Last 24 hours
           </p>
 
           <template v-slot:actions>
@@ -67,34 +99,7 @@
         </material-chart-card>
       </v-col>
 
-      <v-col
-        cols="12"
-        lg="6"
-      >
-        <material-chart-card
-          :data="dataCompletedTasksChart.data"
-          :options="dataCompletedTasksChart.options"
-          color="green"
-          type="Line"
-        >
-          <h3 class="title font-weight-light">
-            Completed Tasks
-          </h3>
-          <p class="category d-inline-flex font-weight-light">
-            Last Last Campaign Performance
-          </p>
-
-          <template v-slot:actions>
-            <v-icon
-              class="mr-2"
-              small
-            >
-              mdi-clock-outline
-            </v-icon>
-            <span class="caption grey--text font-weight-light">campaign sent 26 minutes ago</span>
-          </template>
-        </material-chart-card>
-      </v-col>
+      
 
       <v-col
         cols="12"
@@ -238,7 +243,7 @@
         >
         <v-data-table
             :headers="headers"
-            
+            :items="items"
             hide-default-footer
           />
 
@@ -263,15 +268,11 @@
     data () {
       return {
         fee: 0.0,
-        sumChartData:{
-          'labels': [],
-          'series': []
-        },
-        dailySalesChart: {
+        totalUsageDayChart: {
           data: {
-            labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+            labels: [],
             series: [
-              [12, 17, 7, 17, 23, 18, 38]
+              []
             ]
           },
           options: {
@@ -279,12 +280,12 @@
               tension: 0
             }),
             low: 0,
-            high: 50, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+            high: 3000, 
             chartPadding: {
               top: 0,
               right: 0,
               bottom: 0,
-              left: 0
+              left: 10
             }
           }
         },
@@ -309,7 +310,7 @@
             }
           }
         },
-        emailsSubscriptionChart: {
+        totalUsageEachNodeChart: {
           data: {
             labels: [],
             series: [
@@ -321,7 +322,7 @@
               showGrid: false
             },
             low: 0,
-            high: 500,
+            high: 1000,
             chartPadding: {
               top: 0,
               right: 5,
@@ -389,31 +390,34 @@
     mounted(){
       axios.get('http://localhost:3085/sensor/sum_24h')
       .then((res)=>{
-        let arr1 = new Array();
-        let arr2 = new Array();
-        let data = res.data
+        let data = res.data;
         for(let i=0;i<data.length;i++){
-          this.emailsSubscriptionChart.data['series'][0].push(data[i]['mA']);
-          this.emailsSubscriptionChart.data['labels'].push(data[i]['mac']);
-
-           
+          this.totalUsageEachNodeChart.data['series'][0].push(data[i]['mA']);
+          this.totalUsageEachNodeChart.data['labels'].push(data[i]['mac']);           
         }
-        console.log(this.emailsSubscriptionChart.data);
+        console.log(this.totalUsageEachNodeChart.data);
         console.log(typeof(this.sumChartData));
-        // this.sumChartData = Object.assign({}, arr1);
-        // this.sumChartLabel = Object.assign({}, arr2);
       })
       .catch((err)=>{
         console.error(err);
       });
+      axios.get('http://localhost:3085/sensor/acc_1m')
+      .then((res)=>{
+        let data = res.data;
+        for(let i=0;i<data.length;i++){
+          this.totalUsageDayChart.data['labels'].push(data[i]['day']);
+          this.totalUsageDayChart.data['series'][0].push(data[i]['합계']);
+        }
+        console.log(this.totalUsageDayChart.data);
+        console.log(typeof(this.totalUsageDayChart.data));
+
+      })
+      .catch((e)=>{
+        console.error(e);
+      });
 
     },
     methods: {
-      async fetchData() {
-        const req = await axios.get('http://localhost:3085/sensor/sum_24h');
-        
-
-      },
       complete (index) {
         this.list[index] = !this.list[index]
       },

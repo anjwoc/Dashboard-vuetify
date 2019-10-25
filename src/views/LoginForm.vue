@@ -107,13 +107,9 @@ export default {
                     email: this.email,
                     password: this.password
                 })
-                .then(res=>{
-                  console.log(res);
-                  let token = res.data.id;
-                  localStorage.setItem("access_token", token);
-                  Cookies.set('token', token, {expires: 60*60})
+                .then(()=>{
                   this.$router.push('/dashboard');
-                })
+                })  
                 .catch((e)=>{
                   console.error(e);
                 });

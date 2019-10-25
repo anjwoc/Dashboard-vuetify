@@ -2,14 +2,10 @@ const express = require('express');
 const mysql = require('mysql');
 const db = require('../models');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
-
 const router = express.Router();
-
 
 router.get('/', async (req, res, next)=>{
     try{
-        let arr = new Array();
-
         //DB 연동해서 DB로부터 센서값 조회
         const con = mysql.createConnection({
             host: 'anjwoc.iptime.org',
@@ -38,7 +34,6 @@ router.get('/', async (req, res, next)=>{
 
 router.get('/24h', async (req, res, next)=>{
     try{
-        let arr = new Array();
         const con = mysql.createConnection({
             host: 'anjwoc.iptime.org',
             port: 3306,
@@ -64,7 +59,6 @@ router.get('/24h', async (req, res, next)=>{
 });
 router.get('/sum_24h', async (req, res, next)=>{
     try{
-        let arr = new Array();
         const con = mysql.createConnection({
             host: 'anjwoc.iptime.org',
             port: 3306,
@@ -74,7 +68,7 @@ router.get('/sum_24h', async (req, res, next)=>{
         });
 
         con.connect();
-        con.query("select mac, sum(mA) AS mA from sensor where insertedAt > DATE_ADD(now(), INTERVAL -24 HOUR) group by mac;", (err, rows, fields)=>{
+        con.query("select mac, sum(mA) AS mA from sensor where insertedAt > DATE_ADD(NOW(), INTERVAL -24 HOUR) group by mac ORDER BY mac ASC;", (err, rows, fields)=>{
             if(!err){
                 console.log('The solution is: ', rows);
                 res.json(rows);
@@ -89,13 +83,9 @@ router.get('/sum_24h', async (req, res, next)=>{
     }
 });
 
-
-const dbRead = () => {
+router.get('/acc_1m', async (req, res, next)=>{
     try{
-        let arr = new Array();
-
-        //DB 연동해서 DB로부터 센서값 조회
-        var con = mysql.createConnection({
+        const con = mysql.createConnection({
             host: 'anjwoc.iptime.org',
             port: 3306,
             user: 'root',
@@ -104,21 +94,37 @@ const dbRead = () => {
         });
 
         con.connect();
-        con.query("select * from sensor where > DATE_ADD(now(), INTERVAL -13 HOUR);"),(err, rows, fields)=>{
+        const query = `
+        SELECT CASE WHEN DAYOFWEEK(insertedAt) = 1 THEN '일'
+            WHEN DAYOFWEEK(insertedAt) = 2 THEN '월'
+            WHEN DAYOFWEEK(insertedAt) = 3 THEN '화'
+            WHEN DAYOFWEEK(insertedAt) = 4 THEN '수'
+            WHEN DAYOFWEEK(insertedAt) = 5 THEN '목'
+            WHEN DAYOFWEEK(insertedAt) = 6 THEN '금'
+            WHEN DAYOFWEEK(insertedAt) = 7 THEN '토'
+        ELSE '오류' END day
+        ,SUM(mA) AS 합계 from sensor
+        WHERE MONTH(sensor.insertedAt) = MONTH(NOW())
+        group by DAYOFWEEK(insertedAt) -- 요일별 그룹
+        ORDER BY (
+            CASE DAYOFWEEK(insertedAt)
+            WHEN 1 THEN 7 ELSE DAYOFWEEK(insertedAt)
+            END
+        );`;
+        con.query(query, (err, rows, fields)=>{
             if(!err){
                 console.log('The solution is: ', rows);
-                arr.push(rows);
+                res.json(rows);
             }
             else
                 console.log('Error while performing Query. ', err);
-        };
-
+        });
         con.end();
     }catch(err){
-        console.log("DB Error");
         console.error(err);
+        return next(err);
     }
-};
+});
 
 const getEletricFee = (total) => {
     //전기요금 계산 공식
