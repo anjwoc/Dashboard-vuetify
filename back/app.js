@@ -23,22 +23,28 @@ dotenv.config();
 db.sequelize.sync( {  } );
 passportConfig();
 
-if(prod){
-	app.use(helmet());
-	app.use(hpp());
-	app.use(morgan('combined'));
-	app.use(cors({
-		origin: 'http://delog.net',
-		credentials: true,
-  }));
-}else{
-  app.use(cors({
-    origin: 'http://localhost:8080',
-    credentials: true,
+// if(prod){
+// 	app.use(helmet());
+// 	app.use(hpp());
+// 	app.use(morgan('combined'));
+// 	app.use(cors({
+// 		origin: 'http://localhost:172.31.9.164:80',
+// 		credentials: true,
+//   }));
+// }else{
+//   app.use(cors({
+//     origin: 'http://localhost:8080',
+//     credentials: true,
+// }));
+// 	app.use(morgan('dev'));
+// }
+app.use(helmet());
+app.use(hpp());
+app.use(morgan('combined'));
+app.use(cors({
+  origin: 'http://localhost:172.31.9.164:80',
+  credentials: true,
 }));
-	app.use(morgan('dev'));
-}
-
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
