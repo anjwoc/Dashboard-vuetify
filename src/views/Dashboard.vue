@@ -378,7 +378,7 @@
       })
     },
     mounted(){
-      axios.get(process.env.base_url + '/sensor/sum_24h')
+      axios.get('http://13.125.115.145:3085/sensor/sum_24h')
       .then((res)=>{
         let data = res.data;
         for(let i=0;i<data.length;i++){
@@ -391,7 +391,7 @@
       .catch((err)=>{
         console.error(err);
       });
-      axios.get(process.env.base_url + '/sensor/acc_1m')
+      axios.get('http://13.125.115.145:3085/sensor/acc_1m')
       .then((res)=>{
         let data = res.data;
         for(let i=0;i<data.length;i++){
