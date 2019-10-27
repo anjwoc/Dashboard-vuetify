@@ -11,7 +11,8 @@ sync(store, router)
 
 Vue.use(new VueSocketIo({
   debug: true,
-  connection: 'http://localhost:3085'
+  connection: 'http://13.125.115.145:3085',
+  //connection: 'http://localhost:3085'
 }))
 
 Vue.config.productionTip = false
