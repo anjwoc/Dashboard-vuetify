@@ -42,7 +42,7 @@ app.use(helmet());
 app.use(hpp());
 app.use(morgan('combined'));
 app.use(cors({
-  origin: 'http://172.31.9.164:80',
+  origin: 'http://delog.net',
   credentials: true,
 }));
 
