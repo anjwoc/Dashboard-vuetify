@@ -245,12 +245,13 @@
 </template>
   <script>
   import axios from 'axios';
+  import dotenv from 'dotenv';
   import {
       mapState,
       mapMutations,
       mapActions,
   }from 'vuex';
-
+  dotenv.config();
   export default {
     data () {
       return {
@@ -377,7 +378,7 @@
       })
     },
     mounted(){
-      axios.get('http://localhost:3085/sensor/sum_24h')
+      axios.get(process.env.baseurl + '/sensor/sum_24h')
       .then((res)=>{
         let data = res.data;
         for(let i=0;i<data.length;i++){
@@ -390,7 +391,7 @@
       .catch((err)=>{
         console.error(err);
       });
-      axios.get('http://localhost:3085/sensor/acc_1m')
+      axios.get(process.env.baseurl + '/sensor/acc_1m')
       .then((res)=>{
         let data = res.data;
         for(let i=0;i<data.length;i++){
