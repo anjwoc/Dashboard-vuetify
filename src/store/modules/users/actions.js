@@ -1,10 +1,11 @@
 import axios from 'axios'
-import { connect } from 'net';
+import dotenv from 'dotenv'
 //actions
+dotenv.config();
 
 export default {
     signUp({commit, state}, payload){
-        axios.post('http://localhost:3085/user', {
+        axios.post(process.env.base_url + '/user', {
           email: payload.email,
           nickname: payload.nickname,
           password: payload.password,
@@ -18,28 +19,8 @@ export default {
             console.error(err);
           });
       },
-      test_login({commit}, loginObj){
-        axios
-        .post('https://reqres.in/api/login', loginObj)
-        .then((res)=>{
-          //성공 시 token
-          let token = res.data.token;
-          let config = {
-            headers: {
-              "access-token": token
-            }
-          }
-          axios
-            .get('https://reqres.in/api/usres/2', config)
-            .then((res)=> {})
-            .catch(err=> {})
-        })
-        .catch(err=>{
-          console.log(err);
-        });
-      },
       logIn({commit, dispatch}, payload){
-        axios.post('http://localhost:3085/user/login',{
+        axios.post(process.env.base_url + '/user/login',{
           email: payload.email,
           password: payload.password,
         },{
@@ -53,7 +34,7 @@ export default {
           });
       },
       logOut({commit }){
-        axios.post('http://localhost:3085/user/logout',{},{
+        axios.post(process.env.base_url + '/user/logout',{},{
           withCredentials: true,
         })
           .then((res)=>{

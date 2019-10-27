@@ -3,6 +3,7 @@ module.exports = {
     disableHostCheck: true
   },
   //린트 끄기
-  lintOnSave: false,
+  lintOnSave: false
+
 
 }

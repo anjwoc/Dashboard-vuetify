@@ -6,11 +6,10 @@ const cookie = require('cookie-parser');
 const morgan = require('morgan');
 const mysql = require('mysql');
 const dotenv = require('dotenv');
-const request = require('request');
 const hpp = require('hpp');
 const helmet = require('helmet');
 
-const pord = process.env.NODE_ENV === 'production';
+const prod = process.env.NODE_ENV === 'production';
 const db = require('./models');
 const passportConfig = require('./passport');
 const app = express();
@@ -31,13 +30,13 @@ if(prod){
 	app.use(cors({
 		origin: 'delog.net',
 		credentials: true,
-	}));
+  }));
 }else{
 	app.use(morgan('dev'));
 }
 
 app.use(cors({
-    origin: 'http://localhost:8080',
+    origin: 'http://delog.net',
     credentials: true,
 }));
 app.use(express.json());
