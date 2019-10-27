@@ -7,6 +7,10 @@ const morgan = require('morgan');
 const mysql = require('mysql');
 const dotenv = require('dotenv');
 const request = require('request');
+const hpp = require('hpp');
+const helmet = require('helmet');
+
+const pord = process.env.NODE_ENV === 'production';
 const db = require('./models');
 const passportConfig = require('./passport');
 const app = express();
@@ -20,7 +24,18 @@ dotenv.config();
 db.sequelize.sync( {  } );
 passportConfig();
 
-app.use(morgan('dev'));
+if(prod){
+	app.use(helmet());
+	app.use(hpp());
+	app.use(morgan('combined'));
+	app.use(cors({
+		origin: 'delog.net',
+		credentials: true,
+	}));
+}else{
+	app.use(morgan('dev'));
+}
+
 app.use(cors({
     origin: 'http://localhost:8080',
     credentials: true,
@@ -48,8 +63,8 @@ app.get('/', (req, res)=>{
 app.use('/user', userRouter);
 app.use('/sensor', sensorRouter);
 
-server.listen(3085, ()=>{
-    console.log(`Backend Server is Listening on port ${3085}`);
+server.listen(prod ? process.env.PORT : 3085, ()=>{
+    console.log(`Backend Server is Listening on port ${prod ? process.env.PORT : 3085}`);
 });
 
 const getEletricFee = (total) => {
