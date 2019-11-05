@@ -42,7 +42,8 @@ app.use(helmet());
 app.use(hpp());
 app.use(morgan('combined'));
 app.use(cors({
-  origin: 'http://delog.net',
+  //origin: 'http://delog.net',
+  origin: 'http://15.164.132.151:80',
   credentials: true,
 }));
 
@@ -90,6 +91,7 @@ const getEletricFee = (total) => {
   fee -= fee%10; // 10원 미만 절사
   //TV보유시 청구 요금 2500원 추가
 
+  fee/=1000;
   return fee;
 };
 
@@ -100,16 +102,16 @@ io.sockets.on('connection', function(socket){
         let realtimeChartLabels = new Array();
         let electricFee = 0;
         let totalUsage = 0;
-        const sql = "select CONCAT(HOUR(insertedAt), '시', MINUTE(insertedAt), '분') AS time, mA from sensor where insertedAt > DATE_SUB(now(), INTERVAL 8 MINUTE) LIMIT 8; "
-              +"select SUM(mA) AS mA from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 MONTH);"
-              +"select SUM(mA) AS mA from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 DAY)";
+        const sql = "select CONCAT(HOUR(insertedAt), ':', MINUTE(insertedAt), ':') AS time, mA from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 DAY) LIMIT 8; "
+              +"select SUM(W) AS mA from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 MONTH);"
+              +"select SUM(W) AS mA from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 DAY)";
         //DB 연동해서 DB로부터 센서값 조회
         const con = mysql.createConnection({
             host: 'anjwoc.iptime.org',
             port: 3306,
             user: 'root',
             password: '1234',
-            database: 'test',
+            database: 'dashboard',
             multipleStatements: true,
         });
         con.connect();
@@ -117,15 +119,17 @@ io.sockets.on('connection', function(socket){
             if(!err){
                 console.log('The solution is: ', rows);
                 const realtime = rows[0]; // 
-                electricFee = getEletricFee(rows[1][0]['mA']);
-                totalUsage = rows[2][0]['mA'];
+                electricFee = getEletricFee(rows[1][0]['W']);
+                totalUsage = rows[2][0]['W'];
                 console.log("------------electricFee----------");
                 console.log(electricFee);
                 console.log("------------totalUsage----------");
                 console.log(totalUsage);
                 for(let i=0;i<rows[0].length;i++){
+                  const { time, mA } = realtime[i];
+                  console.log(time, mA);
                   realtimeChartLabels.push(realtime[i]['time']);
-                  realtimeChartSeries.push(realtime[i]['mA']);
+                  realtimeChartSeries.push(realtime[i]['W']);
                 }
 
                 io.emit('realtimeChartLabels', realtimeChartLabels);

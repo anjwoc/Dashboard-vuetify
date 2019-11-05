@@ -16,7 +16,6 @@
       >
         <v-icon>mdi-view-list</v-icon>
       </v-btn>
-      <div>{{ title }}</div>
       
     </v-toolbar-title>
 

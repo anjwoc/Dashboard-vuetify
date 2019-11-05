@@ -14,11 +14,11 @@ const sensorRouter = (function(io) {
                 port: 3306,
                 user: 'root',
                 password: '1234',
-                database: 'test'
+                database: 'dashboard'
             });
     
             con.connect();
-            con.query("select CONCAT(HOUR(insertedAt), '시', MINUTE(insertedAt), '분') AS time, mA from sensor where insertedAt > DATE_SUB(now(), INTERVAL 8 MINUTE) LIMIT 8;",(err, rows, fields)=>{
+            con.query("select CONCAT(HOUR(insertedAt), '시', MINUTE(insertedAt), '분') AS time, W from sensor where insertedAt > DATE_SUB(now(), INTERVAL 8 MINUTE) LIMIT 8;",(err, rows, fields)=>{
                 if(!err){
                     console.log('The solution is: ', rows);
                     res.json(rows);
@@ -41,11 +41,11 @@ const sensorRouter = (function(io) {
                 port: 3306,
                 user: 'root',
                 password: '1234',
-                database: 'test'
+                database: 'dashboard'
             });
     
             con.connect();
-            con.query("select * from sensor where insertedAt > DATE_ADD(now(), INTERVAL -24 HOUR) Limit 10;", (err, rows, fields)=>{
+            con.query("select * from sensor where insertedAt > DATE_SUB(now(), INTERVAL -24 HOUR) Limit 10;", (err, rows, fields)=>{
                 if(!err){
                     console.log('The solution is: ', rows);
                     res.json(rows);
@@ -66,11 +66,11 @@ const sensorRouter = (function(io) {
                 port: 3306,
                 user: 'root',
                 password: '1234',
-                database: 'test'
+                database: 'dashboard'
             });
     
             con.connect();
-            con.query("select mac, sum(mA) AS mA from sensor where insertedAt > DATE_ADD(NOW(), INTERVAL -24 HOUR) group by mac ORDER BY mac ASC;", (err, rows, fields)=>{
+            con.query("select mac, sum(W) AS W from sensor where insertedAt > DATE_ADD(NOW(), INTERVAL -24 HOUR) group by mac ORDER BY mac ASC;", (err, rows, fields)=>{
                 if(!err){
                     console.log('The solution is: ', rows);
                     res.json(rows);
@@ -92,7 +92,7 @@ const sensorRouter = (function(io) {
                 port: 3306,
                 user: 'root',
                 password: '1234',
-                database: 'test'
+                database: 'dashboard'
             });
     
             con.connect();
@@ -105,7 +105,7 @@ const sensorRouter = (function(io) {
                 WHEN DAYOFWEEK(insertedAt) = 6 THEN '금'
                 WHEN DAYOFWEEK(insertedAt) = 7 THEN '토'
             ELSE '오류' END day
-            ,SUM(mA) AS 합계 from sensor
+            ,SUM(W) AS 합계 from sensor
             WHERE MONTH(sensor.insertedAt) = MONTH(NOW())
             group by DAYOFWEEK(insertedAt) -- 요일별 그룹
             ORDER BY (
@@ -128,6 +128,88 @@ const sensorRouter = (function(io) {
         }
     });
     
+    
+    router.get('/nodeStat', async (req, res, next)=>{
+        try{
+            const con = mysql.createConnection({
+                host: 'anjwoc.iptime.org',
+                port: 3306,
+                user: 'root',
+                password: '1234',
+                database: 'dashboard'
+            });
+            const query = `SELECT DISTINCT(mac) FROM sensor `;
+            con.query(query, (err, rows, fields)=>{
+                if(!err){
+                    console.log('The solution is: ', rows);
+                    res.json(rows);
+                }else{
+                    console.log('Error while performing Query. ', err);
+                }
+            })
+        }catch(err){
+            console.error(err);
+            return next(err);
+        }
+    });
+
+    router.get('/recent_20', async (req, res, next)=>{
+        try{
+            const con = mysql.createConnection({
+                host: 'anjwoc.iptime.org',
+                port: 3306,
+                user: 'root',
+                password: '1234',
+                database: 'dashboard'
+            });
+            const query = `SELECT * FROM sensor 
+            ORDER BY insertedAt DESC
+            LIMIT 10;`;
+            con.query(query, (err, rows, fields)=>{
+                if(!err){
+                    console.log('The solution is: ', rows);
+                    res.json(rows);
+                }else{
+                    console.log('Error while performing Query. ', err);
+                }
+            })
+        }catch(err){
+            console.error(err);
+            return next(err);
+        }
+    });
+
+    router.get('/Avg_Months', async(req, res, next)=>{
+        try{
+            const con = mysql.createConnection({
+                host: 'anjwoc.iptime.org',
+                port: 3306,
+                user: 'root',
+                password: '1234',
+                database: 'dashboard'
+            });
+            con.connect();
+            const query = `SELECT A.dt, A.total_usage/1000 AS kw FROM (
+                      SELECT insertedAt, CONCAT(YEAR(insertedAt), '-', MONTH(insertedAt)) AS dt, SUM(w) AS total_usage FROM sensor
+                      GROUP BY MONTH(insertedAt)
+                      HAVING YEAR(insertedAt) = YEAR(DATE(NOW()))
+                )A`;
+
+            con.query(query, (err, rows, fields)=>{
+                if(!err){
+                    console.log('The solution is: ', rows);
+                    res.json(rows);
+                }
+                else
+                    console.log('Error while performing Query. ', err);
+            })
+            
+        }catch(err){
+            console.error(err);
+            return next(err);
+        }
+    });
+   
    
     return router;
 });

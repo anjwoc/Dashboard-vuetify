@@ -7,16 +7,17 @@
         lg="12"
       >
         <material-chart-card
-          :data="realTimeChartChart.data"
-          :options="realTimeChartChart.options"
+          :data="realTimeChart.data"
+          :options="realTimeChart.options"
           color="green"
           type="Line"
         >
           <h3 class="title font-weight-light">
-            Completed Tasks(당일 00시 부터 누적사용량 최대 9시간 까지 표현되는)
+            Real-time usage chart
           </h3>
           <p class="category d-inline-flex font-weight-light">
-            Last Last Campaign Performance
+            실시간 사용량 차트<br/>
+            Last eight Data
           </p>
 
           <template v-slot:actions>
@@ -32,29 +33,23 @@
       </v-col>
 
 
-      <v-col
-        cols="12"
-        lg="4"
-      >
-        <material-chart-card
-          :data="totalUsageDayChart.data"
-          :options="totalUsageDayChart.options"
-          color="info"
-          type="Line"
+    <v-col
+      cols="12"
+    >
+      <material-chart-card
+          :data="MonthlyAverageChart.data"
+          :options="MonthlyAverageChart.options"
+          :responsive-options="totalUsageEachNodeChart.responsiveOptions"
+          color="danger"
+          type="Bar"
         >
           <h4 class="title font-weight-light">
-            Total Usage by Day of the Month
+            Total monthly usage this year
+            
           </h4>
-
           <p class="category d-inline-flex font-weight-light">
-            <v-icon
-              color="green"
-              small
-            >
-              mdi-arrow-up
-            </v-icon>
-            <span class="green--text">55% 어제 사용량과의 차이를 퍼센트를 computed에서 계산해서 넣고</span>&nbsp;
-            increase in today's sales(v-if로 increase인지 decrease인지 구분)
+            이번 년도 월별 총 사용량<br/>
+            < 1월~12월 >
           </p>
 
           <template v-slot:actions>
@@ -64,53 +59,17 @@
             >
               mdi-clock-outline
             </v-icon>
-            <span class="caption grey--text font-weight-light">updated 4(이 숫자는 데이터 넘길때 타임스태프 찍어서 서로 시간차이 구해서넣고) minutes ago</span>
+            <span class="caption grey--text font-weight-light">updated on refresh</span>
           </template>
         </material-chart-card>
       </v-col>
 
 
-      <!-- 여기 수정해야됌 -->
-      <v-col
-        cols="12"
-        lg="4"
-      >
-        <material-chart-card
-          :data="totalUsageDayChart.data"
-          :options="totalUsageDayChart.options"
-          color="info"
-          type="Line"
-        >
-          <h4 class="title font-weight-light">
-            새로 추가할 그래프
-          </h4>
 
-          <p class="category d-inline-flex font-weight-light">
-            <v-icon
-              color="green"
-              small
-            >
-              mdi-arrow-up
-            </v-icon>
-            <span class="green--text">추가할 그래프 부분</span>&nbsp;
-            추가
-          </p>
-
-          <template v-slot:actions>
-            <v-icon
-              class="mr-2"
-              small
-            >
-              mdi-clock-outline
-            </v-icon>
-            <span class="caption grey--text font-weight-light">updated 4(이 숫자는 데이터 넘길때 타임스태프 찍어서 서로 시간차이 구해서넣고) minutes ago</span>
-          </template>
-        </material-chart-card>
-      </v-col>
 
       <v-col
         cols="12"
-        lg="4"
+        lg="6"
       >
         <material-chart-card
           :data="totalUsageEachNodeChart.data"
@@ -120,9 +79,11 @@
           type="Bar"
         >
           <h4 class="title font-weight-light">
-            Total Usage for Each Node
+            Total Usage for Each Node <br/> 
+            
           </h4>
           <p class="category d-inline-flex font-weight-light">
+            각 노드별 일일 총 사용량<br/>
             Last 24 hours
           </p>
 
@@ -133,11 +94,45 @@
             >
               mdi-clock-outline
             </v-icon>
-            <span class="caption grey--text font-weight-light">updated 10 minutes ago</span>
+            <span class="caption grey--text font-weight-light">updated on refresh</span>
           </template>
         </material-chart-card>
       </v-col>
 
+
+      <v-col
+        cols="12"
+        lg="6"
+      >
+        <material-chart-card
+          :data="totalUsageDayChart.data"
+          :options="totalUsageDayChart.options"
+          color="warning"
+          type="Line"
+        >
+          <h4 class="title font-weight-light">
+            Total Usage by Day of the Month
+          </h4>
+
+          <p class="category d-inline-flex font-weight-light">
+            이번 달 요일 별 총 사용량
+          </p>
+
+          <template v-slot:actions>
+            <v-icon
+              class="mr-2"
+              small
+            >
+              mdi-clock-outline
+            </v-icon>
+            <span class="caption grey--text font-weight-light">updated on refresh</span>
+          </template>
+        </material-chart-card>
+      </v-col>
+
+
+      
+        
       
 
       <v-col
@@ -184,7 +179,8 @@
           text="노드 정보"
         >
         <v-data-table
-            :headers="headers"
+            :headers="nodeStatHeaders"
+            :items="nodeStatItems"
             hide-default-footer
           /> 
         </material-card>
@@ -201,13 +197,12 @@
           text="여기에는 뭘 넣을까??"
         >
         <v-data-table
-            :headers="headers"
-            :items="items"
+            :headers="recentItemHeaders"
+            :items="recentItems"
             hide-default-footer
         />
 
         </material-card>
-
       </v-col>
     </v-row>
     
@@ -251,7 +246,7 @@
             }
           }
         },
-        realTimeChartChart: {
+        realTimeChart: { 
           data: {
             labels: [],
             series: [
@@ -263,7 +258,7 @@
               tension: 0
             }),
             low: 0,
-            high: 100, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+            high: 50, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
             chartPadding: {
               top: 0,
               right: 5,
@@ -284,7 +279,7 @@
               showGrid: false
             },
             low: 0,
-            high: 1200,
+            high: 20,
             chartPadding: {
               top: 0,
               right: 5,
@@ -303,7 +298,45 @@
             }]
           ]
         },
-        headers: [
+        MonthlyAverageChart: {
+          data: {
+            labels: [],
+            series: [
+              []
+              ]            
+          },
+          options: {
+            axisX: {
+              showGrid: false
+            },
+            low: 0,
+            high: 1000,
+            chartPadding: {
+              top: 0,
+              right: 0,
+              bottom: 0,
+              left: 20
+            }
+          },
+          responsiveOptions: [
+            ['screen and (max-width: 640px)', {
+              seriesBarDistance: 5,
+              axisX: {
+                labelInterpolationFnc: function (value) {
+                  return value[0]
+                }
+              }
+            }]
+          ]
+        },
+        nodeStatHeaders: [
+          {
+            sortable: false,
+            text: 'Mac',
+            value: 'mac'
+          }
+        ],
+        recentItemHeaders: [
           {
             sortable: false,
             text: 'InsertedAt',
@@ -320,14 +353,22 @@
             value: 'no',
             align: 'right'
           },
+          
           {
             sortable: false,
-            text: 'mA',
-            value: 'mA',
+            text: 'A',
+            value: 'A',
+            align: 'right'
+          },
+          {
+            sortable: false,
+            text: 'W',
+            value: 'W',
             align: 'right'
           }
         ],
-        items: [],
+        recentItems: [],
+        nodeStatItems: [],
         tabs: 0,
         list: {
           0: false,
@@ -339,13 +380,8 @@
     computed:{
       ...mapState({
         me : state=>state.users.me,
-        twentyFour: state=>state.users.twentyFour,
-        tableItem: state=>state.users.tableItem,
-
         }),
       ...mapActions('users', {
-        loadDB: 'loadDB',
-        totalItem: 'totalItem',
 
       })
     },
@@ -354,8 +390,11 @@
       .then((res)=>{
         let data = res.data;
         for(let i=0;i<data.length;i++){
-          this.totalUsageEachNodeChart.data['series'][0].push(data[i]['mA']);
-          this.totalUsageEachNodeChart.data['labels'].push(data[i]['mac']);           
+          const {mac, W} = data[i];
+          console.log("mac, W")
+          console.log(mac, W);
+          this.totalUsageEachNodeChart.data['series'][0].push(W);
+          this.totalUsageEachNodeChart.data['labels'].push(mac);           
         }
         console.log(this.totalUsageEachNodeChart.data);
         console.log(typeof(this.sumChartData));
@@ -372,11 +411,11 @@
         }
         console.log(this.totalUsageDayChart.data);
         console.log(typeof(this.totalUsageDayChart.data));
+
       })
       .catch((e)=>{
         console.error(e);
       });
-      
       axios.get('http://13.125.115.145:3085/sensor/Avg_Months')
       .then((res)=>{
         let data = res.data;
@@ -412,7 +451,6 @@
         console.error(e);
       });
 
-
     },
     methods: {
       complete (index) {
@@ -421,10 +459,10 @@
     },
     sockets:{
       realtimeChartLabels(labels) {
-        this.realTimeChartChart.data['labels'] = labels;
+        this.realTimeChart.data['labels'] = labels;
       },
       realtimeChartSeries(series){
-        this.realTimeChartChart.data['series'][0] = series;
+        this.realTimeChart.data['series'][0] = series;
       },
       electricFee(fee){
         this.fee = "￦"+fee;
