@@ -166,7 +166,7 @@
           icon="mdi-flash"
           title="electricity usage"
           v-model="this.totalUsage_mA"
-          small-value="mA"
+          small-value="W"
           sub-icon="mdi-flash"
           sub-icon-color="error"
           sub-text="일일 누적 전기 사용량"
@@ -322,8 +322,8 @@
           },
           {
             sortable: false,
-            text: 'mA',
-            value: 'mA',
+            text: 'W',
+            value: 'W',
             align: 'right'
           }
         ],
@@ -354,7 +354,7 @@
       .then((res)=>{
         let data = res.data;
         for(let i=0;i<data.length;i++){
-          this.totalUsageEachNodeChart.data['series'][0].push(data[i]['mA']);
+          this.totalUsageEachNodeChart.data['series'][0].push(data[i]['W']);
           this.totalUsageEachNodeChart.data['labels'].push(data[i]['mac']);           
         }
         console.log(this.totalUsageEachNodeChart.data);
