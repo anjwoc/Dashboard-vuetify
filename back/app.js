@@ -102,7 +102,7 @@ io.sockets.on('connection', function(socket){
         let realtimeChartLabels = new Array();
         let electricFee = 0;
         let totalUsage = 0;
-        const sql = "select CONCAT(HOUR(insertedAt), ':', MINUTE(insertedAt), ':') AS time, mA from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 DAY) LIMIT 8; "
+        const sql = "select CONCAT(HOUR(insertedAt), ':', MINUTE(insertedAt), ':') AS time, W from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 DAY) LIMIT 8; "
               +"select SUM(W) AS mA from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 MONTH);"
               +"select SUM(W) AS mA from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 DAY)";
         //DB 연동해서 DB로부터 센서값 조회
@@ -148,7 +148,7 @@ io.sockets.on('connection', function(socket){
         console.error(err);
         return next(err);
     };
-  }, 1000);
+  }, 4000);
 
 
 
