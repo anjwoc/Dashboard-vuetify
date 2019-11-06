@@ -444,6 +444,7 @@
       .then(res=>{
         let data = res.data;
         this.nodeStatItems = data;
+        console.log("nodeStat==============================")
         console.log(this.nodeStatItems);
       })
       .catch(e=>{

@@ -5,7 +5,7 @@ const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 const router = express.Router();
 
 const sensorRouter = (function(io) {
-    router.get('/:nodeId', async (req, res, next)=>{
+    router.get('/', async (req, res, next)=>{
         try{
             let arr = new Array();
             //DB 연동해서 DB로부터 센서값 조회
@@ -17,9 +17,8 @@ const sensorRouter = (function(io) {
                 database: 'dashboard'
             });
             con.connect();
-            const nodeId = req.params.nodeId;
             const query = `select CONCAT(HOUR(insertedAt), '시', MINUTE(insertedAt), '분') AS time, W from sensor 
-            where insertedAt > DATE_SUB(now(), INTERVAL 8 MINUTE) AND NO=${nodeId} 
+            where insertedAt > DATE_SUB(now(), INTERVAL 8 MINUTE)
             LIMIT 8;`
 
             con.query(query,(err, rows, fields)=>{
@@ -150,7 +149,7 @@ const sensorRouter = (function(io) {
                 password: '1234',
                 database: 'dashboard'
             });
-            const query = `SELECT DISTINCT(mac) FROM sensor `;
+            const query = `SELECT DISTINCT(mac) FROM sensor;`;
             con.query(query, (err, rows, fields)=>{
                 if(!err){
                     console.log('The solution is: ', rows);
