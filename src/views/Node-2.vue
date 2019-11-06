@@ -65,6 +65,8 @@
       </v-col>
 
 
+
+
       <v-col
         cols="12"
         lg="6"
@@ -97,6 +99,7 @@
         </material-chart-card>
       </v-col>
 
+
       <v-col
         cols="12"
         lg="6"
@@ -126,6 +129,12 @@
           </template>
         </material-chart-card>
       </v-col>
+
+
+      
+        
+      
+
       <v-col
         cols="12"
         sm="6"
@@ -152,7 +161,7 @@
           icon="mdi-flash"
           title="electricity usage"
           v-model="this.totalUsage_mA"
-          small-value="mA"
+          small-value="KW"
           sub-icon="mdi-flash"
           sub-icon-color="error"
           sub-text="일일 누적 전기 사용량"
@@ -184,8 +193,8 @@
       >
         <material-card
           color="primary"
-          title="test Sheet"
-          text="여기에는 뭘 넣을까??"
+          title="Latest 20 Data"
+          text="최근 20개 데이터"
         >
         <v-data-table
             :headers="recentItemHeaders"
@@ -376,76 +385,84 @@
 
       })
     },
+    watch:{
+      '$route' (to, from){
+        //경로 변경에 반응해서 실행
+        this.onMounted();
+      },
+    },
     mounted(){
-      axios.get('http://13.125.115.145:3085/sensor/sum_24h/1')
-      .then((res)=>{
-        let data = res.data;
-        for(let i=0;i<data.length;i++){
-          const {mac, W} = data[i];
-          console.log("mac, W")
-          console.log(mac, W);
-          this.totalUsageEachNodeChart.data['series'][0].push(W);
-          this.totalUsageEachNodeChart.data['labels'].push(mac);           
-        }
-        console.log(this.totalUsageEachNodeChart.data);
-        console.log(typeof(this.sumChartData));
-      })
-      .catch((err)=>{
-        console.error(err);
-      });
-      axios.get('http://13.125.115.145:3085/sensor/acc_1m/1')
-      .then((res)=>{
-        let data = res.data;
-        for(let i=0;i<data.length;i++){
-          this.totalUsageDayChart.data['labels'].push(data[i]['day']);
-          this.totalUsageDayChart.data['series'][0].push(data[i]['합계']);
-        }
-        console.log(this.totalUsageDayChart.data);
-        console.log(typeof(this.totalUsageDayChart.data));
-
-      })
-      .catch((e)=>{
-        console.error(e);
-      });
-      axios.get('http://13.125.115.145:3085/sensor/Avg_Months/1')
-      .then((res)=>{
-        let data = res.data;
-        console.log("test--------------------------------")
-        console.log(data);
-        for(let i=0;i<data.length;i++){
-          this.MonthlyAverageChart.data['labels'].push(data[i]['dt']);
-          this.MonthlyAverageChart.data['series'][0].push(data[i]['kw']);
-        }
-        console.log(this.MonthlyAverageChart.data);
-      })
-      .catch((e)=>{
-        console.error(e);
-      });
-      axios.get('http://13.125.115.145:3085/sensor/recent_20/1')
-      .then((res)=>{
-        let data = res.data;
-        this.recentItems = data;
-
-      })
-      .catch((e)=>{
-        console.error(e);
-      });
-
-      axios.get('http://13.125.115.145:3085/sensor/nodeStat')
-      .then(res=>{
-        let data = res.data;
-        this.nodeStatItems = data;
-        console.log(nodenodenode)
-        console.log(nodeStatItems);
-      })
-      .catch(e=>{
-        console.error(e);
-      });
-
+      onMounted();
     },
     methods: {
       complete (index) {
         this.list[index] = !this.list[index]
+      },
+      onMounted(){
+        axios.get('http://13.125.115.145:3085/sensor/sum_24h/1')
+        .then((res)=>{
+          let data = res.data;
+          for(let i=0;i<data.length;i++){
+            const {mac, W} = data[i];
+            console.log("mac, W")
+            console.log(mac, W);
+            this.totalUsageEachNodeChart.data['series'][0].push(W);
+            this.totalUsageEachNodeChart.data['labels'].push(mac);           
+          }
+          console.log(this.totalUsageEachNodeChart.data);
+          console.log(typeof(this.sumChartData));
+        })
+        .catch((err)=>{
+          console.error(err);
+        });
+        axios.get('http://13.125.115.145:3085/sensor/acc_1m/1')
+        .then((res)=>{
+          let data = res.data;
+          for(let i=0;i<data.length;i++){
+            this.totalUsageDayChart.data['labels'].push(data[i]['day']);
+            this.totalUsageDayChart.data['series'][0].push(data[i]['합계']);
+          }
+          console.log(this.totalUsageDayChart.data);
+          console.log(typeof(this.totalUsageDayChart.data));
+
+        })
+        .catch((e)=>{
+          console.error(e);
+        });
+        axios.get('http://13.125.115.145:3085/sensor/Avg_Months/1')
+        .then((res)=>{
+          let data = res.data;
+          console.log("test--------------------------------")
+          console.log(data);
+          for(let i=0;i<data.length;i++){
+            this.MonthlyAverageChart.data['labels'].push(data[i]['dt']);
+            this.MonthlyAverageChart.data['series'][0].push(data[i]['kw']);
+          }
+          console.log(this.MonthlyAverageChart.data);
+        })
+        .catch((e)=>{
+          console.error(e);
+        });
+        axios.get('http://13.125.115.145:3085/sensor/recent_20/1')
+        .then((res)=>{
+          let data = res.data;
+          this.recentItems = data;
+
+        })
+        .catch((e)=>{
+          console.error(e);
+        });
+
+        axios.get('http://13.125.115.145:3085/sensor/nodeStat')
+        .then(res=>{
+          let data = res.data;
+          this.nodeStatItems = data;
+          console.log("nodeStat==============================")
+          console.log(this.nodeStatItems);
+        })
+        .catch(e=>{
+          console.error(e);
+        });
       },
     },
     sockets:{

@@ -388,7 +388,7 @@
     watch:{
       '$route' (to, from){
         //경로 변경에 반응해서 실행
-        onMounted();
+        this.onMounted();
       },
     },
     mounted(){
