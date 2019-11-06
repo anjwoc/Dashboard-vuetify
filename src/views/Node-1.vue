@@ -392,7 +392,7 @@
       },
     },
     mounted(){
-      onMounted();
+      this.onMounted();
     },
     methods: {
       complete (index) {
