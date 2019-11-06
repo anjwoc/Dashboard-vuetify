@@ -43,7 +43,7 @@ app.use(hpp());
 app.use(morgan('combined'));
 app.use(cors({
   //origin: 'http://delog.net',
-  origin: 'http://15.164.132.151:80',
+  origin: 'http://15.164.132.151',
   credentials: true,
 }));
 
@@ -103,8 +103,8 @@ io.sockets.on('connection', function(socket){
         let electricFee = 0;
         let totalUsage = 0;
         const sql = "select CONCAT(HOUR(insertedAt), ':', MINUTE(insertedAt), ':') AS time, W from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 DAY) LIMIT 8; "
-              +"select SUM(W) AS mA from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 MONTH);"
-              +"select SUM(W) AS mA from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 DAY)";
+              +"select SUM(W) AS W from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 MONTH);"
+              +"select SUM(W) AS W from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 DAY)";
         //DB 연동해서 DB로부터 센서값 조회
         const con = mysql.createConnection({
             host: 'anjwoc.iptime.org',
@@ -126,8 +126,8 @@ io.sockets.on('connection', function(socket){
                 console.log("------------totalUsage----------");
                 console.log(totalUsage);
                 for(let i=0;i<rows[0].length;i++){
-                  const { time, mA } = realtime[i];
-                  console.log(time, mA);
+                  const { time, W } = realtime[i];
+                  console.log(time, W);
                   realtimeChartLabels.push(realtime[i]['time']);
                   realtimeChartSeries.push(realtime[i]['W']);
                 }
