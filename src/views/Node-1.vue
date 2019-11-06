@@ -385,76 +385,84 @@
 
       })
     },
+    watch:{
+      '$route' (to, from){
+        //경로 변경에 반응해서 실행
+        onMounted();
+      },
+    },
     mounted(){
-      axios.get('http://13.125.115.145:3085/sensor/sum_24h/0')
-      .then((res)=>{
-        let data = res.data;
-        for(let i=0;i<data.length;i++){
-          const {mac, W} = data[i];
-          console.log("mac, W")
-          console.log(mac, W);
-          this.totalUsageEachNodeChart.data['series'][0].push(W);
-          this.totalUsageEachNodeChart.data['labels'].push(mac);           
-        }
-        console.log(this.totalUsageEachNodeChart.data);
-        console.log(typeof(this.sumChartData));
-      })
-      .catch((err)=>{
-        console.error(err);
-      });
-      axios.get('http://13.125.115.145:3085/sensor/acc_1m/0')
-      .then((res)=>{
-        let data = res.data;
-        for(let i=0;i<data.length;i++){
-          this.totalUsageDayChart.data['labels'].push(data[i]['day']);
-          this.totalUsageDayChart.data['series'][0].push(data[i]['합계']);
-        }
-        console.log(this.totalUsageDayChart.data);
-        console.log(typeof(this.totalUsageDayChart.data));
-
-      })
-      .catch((e)=>{
-        console.error(e);
-      });
-      axios.get('http://13.125.115.145:3085/sensor/Avg_Months/0')
-      .then((res)=>{
-        let data = res.data;
-        console.log("test--------------------------------")
-        console.log(data);
-        for(let i=0;i<data.length;i++){
-          this.MonthlyAverageChart.data['labels'].push(data[i]['dt']);
-          this.MonthlyAverageChart.data['series'][0].push(data[i]['kw']);
-        }
-        console.log(this.MonthlyAverageChart.data);
-      })
-      .catch((e)=>{
-        console.error(e);
-      });
-      axios.get('http://13.125.115.145:3085/sensor/recent_20/0')
-      .then((res)=>{
-        let data = res.data;
-        this.recentItems = data;
-
-      })
-      .catch((e)=>{
-        console.error(e);
-      });
-
-      axios.get('http://13.125.115.145:3085/sensor/nodeStat')
-      .then(res=>{
-        let data = res.data;
-        this.nodeStatItems = data;
-        console.log("nodeStat==============================")
-        console.log(this.nodeStatItems);
-      })
-      .catch(e=>{
-        console.error(e);
-      });
-
+      onMounted();
     },
     methods: {
       complete (index) {
         this.list[index] = !this.list[index]
+      },
+      onMounted(){
+        axios.get('http://13.125.115.145:3085/sensor/sum_24h/0')
+        .then((res)=>{
+          let data = res.data;
+          for(let i=0;i<data.length;i++){
+            const {mac, W} = data[i];
+            console.log("mac, W")
+            console.log(mac, W);
+            this.totalUsageEachNodeChart.data['series'][0].push(W);
+            this.totalUsageEachNodeChart.data['labels'].push(mac);           
+          }
+          console.log(this.totalUsageEachNodeChart.data);
+          console.log(typeof(this.sumChartData));
+        })
+        .catch((err)=>{
+          console.error(err);
+        });
+        axios.get('http://13.125.115.145:3085/sensor/acc_1m/0')
+        .then((res)=>{
+          let data = res.data;
+          for(let i=0;i<data.length;i++){
+            this.totalUsageDayChart.data['labels'].push(data[i]['day']);
+            this.totalUsageDayChart.data['series'][0].push(data[i]['합계']);
+          }
+          console.log(this.totalUsageDayChart.data);
+          console.log(typeof(this.totalUsageDayChart.data));
+
+        })
+        .catch((e)=>{
+          console.error(e);
+        });
+        axios.get('http://13.125.115.145:3085/sensor/Avg_Months/0')
+        .then((res)=>{
+          let data = res.data;
+          console.log("test--------------------------------")
+          console.log(data);
+          for(let i=0;i<data.length;i++){
+            this.MonthlyAverageChart.data['labels'].push(data[i]['dt']);
+            this.MonthlyAverageChart.data['series'][0].push(data[i]['kw']);
+          }
+          console.log(this.MonthlyAverageChart.data);
+        })
+        .catch((e)=>{
+          console.error(e);
+        });
+        axios.get('http://13.125.115.145:3085/sensor/recent_20/0')
+        .then((res)=>{
+          let data = res.data;
+          this.recentItems = data;
+
+        })
+        .catch((e)=>{
+          console.error(e);
+        });
+
+        axios.get('http://13.125.115.145:3085/sensor/nodeStat')
+        .then(res=>{
+          let data = res.data;
+          this.nodeStatItems = data;
+          console.log("nodeStat==============================")
+          console.log(this.nodeStatItems);
+        })
+        .catch(e=>{
+          console.error(e);
+        });
       },
     },
     sockets:{
