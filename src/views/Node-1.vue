@@ -49,7 +49,7 @@
           </h4>
           <p class="category d-inline-flex font-weight-light">
             이번 년도 월별 총 사용량<br/>
-            < 1월~12월 >
+            ( 1월~12월 )
           </p>
 
           <template v-slot:actions>
@@ -161,7 +161,7 @@
           icon="mdi-flash"
           title="electricity usage"
           v-model="this.totalUsage_mA"
-          small-value="mA"
+          small-value="W"
           sub-icon="mdi-flash"
           sub-icon-color="error"
           sub-text="일일 누적 전기 사용량"
@@ -193,8 +193,8 @@
       >
         <material-card
           color="primary"
-          title="test Sheet"
-          text="여기에는 뭘 넣을까??"
+          title="Latest 20 Data"
+          text="최근 20개 데이터"
         >
         <v-data-table
             :headers="recentItemHeaders"
@@ -386,7 +386,7 @@
       })
     },
     mounted(){
-      axios.get('http://13.125.115.145:3085/sensor/sum_24h')
+      axios.get('http://13.125.115.145:3085/sensor/sum_24h/0')
       .then((res)=>{
         let data = res.data;
         for(let i=0;i<data.length;i++){
@@ -402,7 +402,7 @@
       .catch((err)=>{
         console.error(err);
       });
-      axios.get('http://13.125.115.145:3085/sensor/acc_1m')
+      axios.get('http://13.125.115.145:3085/sensor/acc_1m/0')
       .then((res)=>{
         let data = res.data;
         for(let i=0;i<data.length;i++){
@@ -416,7 +416,7 @@
       .catch((e)=>{
         console.error(e);
       });
-      axios.get('http://13.125.115.145:3085/sensor/Avg_Months')
+      axios.get('http://13.125.115.145:3085/sensor/Avg_Months/0')
       .then((res)=>{
         let data = res.data;
         console.log("test--------------------------------")
@@ -430,7 +430,7 @@
       .catch((e)=>{
         console.error(e);
       });
-      axios.get('http://13.125.115.145:3085/sensor/recent_20')
+      axios.get('http://13.125.115.145:3085/sensor/recent_20/0')
       .then((res)=>{
         let data = res.data;
         this.recentItems = data;

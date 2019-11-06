@@ -49,7 +49,7 @@
           </h4>
           <p class="category d-inline-flex font-weight-light">
             이번 년도 월별 총 사용량<br/>
-            < 1월~12월 >
+            ( 1월~12월 )
           </p>
 
           <template v-slot:actions>
@@ -63,8 +63,6 @@
           </template>
         </material-chart-card>
       </v-col>
-
-
 
 
       <v-col
@@ -99,7 +97,6 @@
         </material-chart-card>
       </v-col>
 
-
       <v-col
         cols="12"
         lg="6"
@@ -129,12 +126,6 @@
           </template>
         </material-chart-card>
       </v-col>
-
-
-      
-        
-      
-
       <v-col
         cols="12"
         sm="6"
@@ -386,7 +377,7 @@
       })
     },
     mounted(){
-      axios.get('http://13.125.115.145:3085/sensor/sum_24h')
+      axios.get('http://13.125.115.145:3085/sensor/sum_24h/1')
       .then((res)=>{
         let data = res.data;
         for(let i=0;i<data.length;i++){
@@ -402,7 +393,7 @@
       .catch((err)=>{
         console.error(err);
       });
-      axios.get('http://13.125.115.145:3085/sensor/acc_1m')
+      axios.get('http://13.125.115.145:3085/sensor/acc_1m/1')
       .then((res)=>{
         let data = res.data;
         for(let i=0;i<data.length;i++){
@@ -416,7 +407,7 @@
       .catch((e)=>{
         console.error(e);
       });
-      axios.get('http://13.125.115.145:3085/sensor/Avg_Months')
+      axios.get('http://13.125.115.145:3085/sensor/Avg_Months/1')
       .then((res)=>{
         let data = res.data;
         console.log("test--------------------------------")
@@ -430,7 +421,7 @@
       .catch((e)=>{
         console.error(e);
       });
-      axios.get('http://13.125.115.145:3085/sensor/recent_20')
+      axios.get('http://13.125.115.145:3085/sensor/recent_20/1')
       .then((res)=>{
         let data = res.data;
         this.recentItems = data;
