@@ -102,9 +102,6 @@ io.sockets.on('connection', function(socket){
         let realtimeChartLabels = new Array();
         let electricFee = 0;
         let totalUsage = 0;
-        const sql = "select CONCAT(HOUR(insertedAt), ':', MINUTE(insertedAt), ':') AS time, W from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 DAY) LIMIT 8; "
-              +"select SUM(W) AS W from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 MONTH);"
-              +"select SUM(W) AS W from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 DAY)";
         //DB 연동해서 DB로부터 센서값 조회
         const con = mysql.createConnection({
             host: 'anjwoc.iptime.org',
@@ -115,6 +112,15 @@ io.sockets.on('connection', function(socket){
             multipleStatements: true,
         });
         con.connect();
+        const sql1 = `select CONCAT(HOUR(insertedAt), ':', MINUTE(insertedAt), ':') AS time, W from sensor 
+        where insertedAt > DATE_SUB(now(), INTERVAL 1 DAY) 
+        LIMIT 8;`;
+        const sql2 = `select SUM(W) AS W from sensor 
+        where insertedAt > DATE_SUB(now(), INTERVAL 1 MONTH);`;
+        const sql3 = `select SUM(W) AS W from sensor 
+        where insertedAt > DATE_SUB(now(), INTERVAL 1 DAY);`;
+        const sql = sql1 + sql2 + sql3;
+
         con.query(sql,(err, rows, fields)=>{
             if(!err){
                 console.log('The solution is: ', rows);
