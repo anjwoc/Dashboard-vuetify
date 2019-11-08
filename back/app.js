@@ -96,12 +96,26 @@ const getEletricFee = (total) => {
 };
 
 io.sockets.on('connection', function(socket){
+  let nodeId = 0;
+
+  socket.on('nodeId', (data)=>{
+    console.log("nodeiddddddddddddddddddddddddddddd");
+    console.log(data);
+    nodeId = data;
+    socket.on('disconnect', function() {
+      console.log('page Changed: ');
+    });
+  });
+
   socket.interval = setInterval(() => {
     try{
         let realtimeChartSeries = new Array();
         let realtimeChartLabels = new Array();
         let electricFee = 0;
         let totalUsage = 0;
+        const sql = `select CONCAT(HOUR(insertedAt), ':', MINUTE(insertedAt), ':', SECOND(insertedAt)) AS time, W from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 MONTH) AND NO=${nodeId} LIMIT 8; `
+              +`select SUM(W) AS W from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 MONTH) AND NO=${nodeId};`
+              +`select SUM(W) AS W from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 DAY) AND NO=${nodeId}`;
         //DB 연동해서 DB로부터 센서값 조회
         const con = mysql.createConnection({
             host: 'anjwoc.iptime.org',
@@ -112,32 +126,24 @@ io.sockets.on('connection', function(socket){
             multipleStatements: true,
         });
         con.connect();
-        const sql1 = `select CONCAT(HOUR(insertedAt), ':', MINUTE(insertedAt), ':') AS time, W from sensor 
-        where insertedAt > DATE_SUB(now(), INTERVAL 1 DAY) 
-        LIMIT 8;`;
-        const sql2 = `select SUM(W) AS W from sensor 
-        where insertedAt > DATE_SUB(now(), INTERVAL 1 MONTH);`;
-        const sql3 = `select SUM(W) AS W from sensor 
-        where insertedAt > DATE_SUB(now(), INTERVAL 1 DAY);`;
-        const sql = sql1 + sql2 + sql3;
-
         con.query(sql,(err, rows, fields)=>{
             if(!err){
-                console.log('The solution is: ', rows);
                 const realtime = rows[0]; // 
                 electricFee = getEletricFee(rows[1][0]['W']);
                 totalUsage = rows[2][0]['W'];
-                console.log("------------electricFee----------");
-                console.log(electricFee);
-                console.log("------------totalUsage----------");
-                console.log(totalUsage);
+                // console.log("------------nodeID----------");
+                // console.log(nodeId);
+                // console.log("------------realtimee----------");
+                // console.log(realtime);
+                // console.log("------------electricFee----------");
+                // console.log(electricFee);
+                // console.log("------------totalUsage----------");
+                // console.log(totalUsage);
                 for(let i=0;i<rows[0].length;i++){
-                  const { time, W } = realtime[i];
-                  console.log(time, W);
-                  realtimeChartLabels.push(realtime[i]['time']);
-                  realtimeChartSeries.push(realtime[i]['W']);
+                  let { time, W } = realtime[i];
+                  realtimeChartLabels.push(time);
+                  realtimeChartSeries.push(W);
                 }
-
                 io.emit('realtimeChartLabels', realtimeChartLabels);
                 io.emit('realtimeChartSeries', realtimeChartSeries);
                 io.emit('electricFee', electricFee);
@@ -146,16 +152,17 @@ io.sockets.on('connection', function(socket){
             else
                 console.log('Error while performing Query. ', err);
         });
-        
-
         con.end();
-        
     }catch(err){
         console.error(err);
         return next(err);
     };
-  }, 4000);
+  }, 2000);
 
+  socket.on('disconnect', function() {
+    console.log('user disconnected: ');
+    clearInterval();
+  });
 
 
 });

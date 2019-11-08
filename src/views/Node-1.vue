@@ -1,11 +1,10 @@
 <template>
   <v-container fluid>
     <v-row>
-
-      <v-col
-        cols="12"
-        lg="12"
-      >
+      <v-col cols="12">
+        <toggle-switch :nodeTitle="nodeTitle"></toggle-switch> 
+      </v-col>
+      <v-col cols="12" lg="12">
         <material-chart-card
           :data="realTimeChart.data"
           :options="realTimeChart.options"
@@ -17,9 +16,9 @@
           </h3>
           <p class="category d-inline-flex font-weight-light">
             실시간 사용량 차트<br/>
-            Last eight Data
+            Recent eight Data
           </p>
-
+          
           <template v-slot:actions>
             <v-icon
               class="mr-2"
@@ -33,9 +32,7 @@
       </v-col>
 
 
-    <v-col
-      cols="12"
-    >
+    <v-col cols="12" >
       <material-chart-card
           :data="MonthlyAverageChart.data"
           :options="MonthlyAverageChart.options"
@@ -48,8 +45,7 @@
             
           </h4>
           <p class="category d-inline-flex font-weight-light">
-            이번 년도 월별 총 사용량<br/>
-            ( 1월~12월 )
+            이번 년도 월별 총 사용량<br/>( 1월~12월 )
           </p>
 
           <template v-slot:actions>
@@ -67,10 +63,7 @@
 
 
 
-      <v-col
-        cols="12"
-        lg="6"
-      >
+      <v-col cols="12" lg="6" >
         <material-chart-card
           :data="totalUsageEachNodeChart.data"
           :options="totalUsageEachNodeChart.options"
@@ -84,7 +77,7 @@
           </h4>
           <p class="category d-inline-flex font-weight-light">
             각 노드별 일일 총 사용량<br/>
-            Last 24 hours
+            Recent 24 hours
           </p>
 
           <template v-slot:actions>
@@ -100,10 +93,7 @@
       </v-col>
 
 
-      <v-col
-        cols="12"
-        lg="6"
-      >
+      <v-col cols="12" lg="6">
         <material-chart-card
           :data="totalUsageDayChart.data"
           :options="totalUsageDayChart.options"
@@ -135,11 +125,7 @@
         
       
 
-      <v-col
-        cols="12"
-        sm="6"
-        lg="6"
-      >
+      <v-col cols="12" sm="6" lg="6">
         <material-stats-card
           color="green"
           icon="mdi-power-plug"
@@ -161,7 +147,7 @@
           icon="mdi-flash"
           title="electricity usage"
           v-model="this.totalUsage_mA"
-          small-value="KW"
+          small-value="mA"
           sub-icon="mdi-flash"
           sub-icon-color="error"
           sub-text="일일 누적 전기 사용량"
@@ -193,7 +179,7 @@
       >
         <material-card
           color="primary"
-          title="Latest 20 Data"
+          title="Recent 20 Data"
           text="최근 20개 데이터"
         >
         <v-data-table
@@ -213,6 +199,7 @@
   <script>
   import axios from 'axios';
   import dotenv from 'dotenv';
+  import ToggleSwitch from './ToggleSwitch_1';
   import {
       mapState,
       mapMutations,
@@ -222,6 +209,7 @@
   export default {
     data () {
       return {
+        nodeTitle: '',
         fee: 0,
         electricityUsage: 0,
         totalUsage_mA: 0,
@@ -377,22 +365,28 @@
         }
       }
     },
+    components:{
+      ToggleSwitch,
+    },
     computed:{
       ...mapState({
         me : state=>state.users.me,
         }),
       ...mapActions('users', {
-
       })
     },
-    watch:{
+    watch: {
       '$route' (to, from){
         //경로 변경에 반응해서 실행
-        this.onMounted();
+        this.$socket.emit('nodeId', '0');
+        onMounted();
       },
     },
     mounted(){
-      this.onMounted();
+      this.nodeTitle = (this.$route.path === '/') ? 'node-1' : this.$route.path.slice(1);
+      console.log(this.nodeTitle);
+      this.$socket.emit('nodeId', '0');
+      onMounted();
     },
     methods: {
       complete (index) {
@@ -457,13 +451,14 @@
         .then(res=>{
           let data = res.data;
           this.nodeStatItems = data;
-          console.log("nodeStat==============================")
-          console.log(this.nodeStatItems);
+          console.log(nodenodenode)
+          console.log(nodeStatItems);
         })
         .catch(e=>{
           console.error(e);
         });
-      },
+
+      }
     },
     sockets:{
       realtimeChartLabels(labels) {

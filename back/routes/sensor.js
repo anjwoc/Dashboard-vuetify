@@ -139,7 +139,26 @@ const sensorRouter = (function(io) {
         }
     });
     
-    
+    router.post('/config', async(req, res, next)=>{
+        try{
+            const onoff = req.body.onoff;
+            const nodeId = req.body.nodeId;
+            console.log(onoff);
+            const sql = `UPDATE router SET onoff=? WHERE NO=${nodeId};`;
+            console.log(sql);
+            con.query(sql,[onoff, nodeId],function(err,rows){
+                if(err) console.log("err : "+err);
+                console.log(rows);
+                res.json(rows);
+            });
+
+        }catch(err){
+            console.error(err);
+            return next(err);
+        }
+    });
+
+
     router.get('/nodeStat', async (req, res, next)=>{
         try{
             const con = mysql.createConnection({
