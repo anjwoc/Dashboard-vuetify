@@ -385,6 +385,7 @@
     mounted(){
       this.nodeTitle = (this.$route.path === '/') ? 'node-1' : this.$route.path.slice(1);
       console.log(this.nodeTitle);
+      this.$socket.emit('nodeId', '0');
       this.onMounted();
     },
     methods: {
