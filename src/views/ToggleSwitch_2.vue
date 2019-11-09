@@ -60,7 +60,7 @@ export default {
     },
     methods: {
         onMounted(){
-            axios.get(`http://localhost:3085/sensor/getToggleSwitch/1`)
+            axios.get(`http://13.125.115.145:3085/sensor/getToggleSwitch/1`)
             .then((res)=>{
                 console.log("Toggle---------------------------");
                 let str = res.data[0].onoff.toString(2);
