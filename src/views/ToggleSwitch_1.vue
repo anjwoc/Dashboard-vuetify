@@ -49,10 +49,18 @@ export default {
     },
     watch: {
     },
-    mounted: {
+    mounted() {
         
     },
     methods: {
+        onMounted(){
+            axios.get(`http://13.125.115.145:3085/sensor/getToggleSwitch/1`)
+            .then((res)=>{
+                console.log("Toggle---------------------------");
+                let str = res.data[0].onoff.toString() === '0'? false:true;
+                this.switch1 = str;
+            })
+        },
         onChange() {
             const onoff = this.switch1 ? 1 : 0;
             const nodeId = 0

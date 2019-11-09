@@ -55,10 +55,19 @@ export default {
     },
     watch: {
     },
-    mounted: {
-        
+    mounted() {
+        this.onMounted();
     },
     methods: {
+        onMounted(){
+            axios.get(`http://localhost:3085/sensor/getToggleSwitch/1`)
+            .then((res)=>{
+                console.log("Toggle---------------------------");
+                let str = res.data[0].onoff.toString(2);
+                this.switch1 = str[0] === '0' ? false : true;
+                this.switch2 = str[1] === '0' ? false : true;
+            })
+        },
         onChange() {
             const n1 = this.switch1 ? '1' : '0';
             const n2 = this.switch2 ? '1' : '0';

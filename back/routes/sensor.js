@@ -254,7 +254,34 @@ const sensorRouter = (function(io) {
             return next(err);
         }
     });
-   
+
+    router.get('/getToggleSwitch/:nodeId', async (req, res, next)=>{
+        try{
+            const con = mysql.createConnection({
+                host: 'anjwoc.iptime.org',
+                port: 3306,
+                user: 'root',
+                password: '1234',
+                database: 'dashboard'
+            });
+            
+            let nodeId= req.params.nodeId;
+            const query = `SELECT onoff from router where NO=${nodeId};`;
+            con.query(query, (err, rows, fields)=>{
+                if(!err){
+                    console.log('The solution is: ', rows);
+                    res.json(rows);
+                }else{
+                    console.log('Error while performing Query. ', err);
+                }
+            })
+            con.end();
+        }catch(err){
+            console.error(err);
+            return next(err);
+        }
+    });
+
    
     return router;
 });
