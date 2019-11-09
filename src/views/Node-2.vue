@@ -388,14 +388,14 @@
     watch: {
       '$route' (to, from){
         //경로 변경에 반응해서 실행
-        this.$socket.emit('nodeId', '1');
+        this.$socket.emit('nodeId', '2');
         this.onMounted();
       },
     },
     mounted(){
       this.nodeTitle = (this.$route.path === '/') ? 'node-1' : this.$route.path.slice(1);
       console.log(this.nodeTitle);
-      this.$socket.emit('nodeId', '1');
+      this.$socket.emit('nodeId', '2');
       this.onMounted();
     },
     methods: {
@@ -403,7 +403,7 @@
         this.list[index] = !this.list[index]
       },
       onMounted(){
-        axios.get('http://13.125.115.145:3085/sensor/sum_24h/1')
+        axios.get('http://13.125.115.145:3085/sensor/sum_24h/2')
         .then((res)=>{
           let data = res.data;
           for(let i=0;i<data.length;i++){
@@ -419,7 +419,7 @@
         .catch((err)=>{
           console.error(err);
         });
-        axios.get('http://13.125.115.145:3085/sensor/acc_1m/1')
+        axios.get('http://13.125.115.145:3085/sensor/acc_1m/2')
         .then((res)=>{
           let data = res.data;
           for(let i=0;i<data.length;i++){
@@ -433,7 +433,7 @@
         .catch((e)=>{
           console.error(e);
         });
-        axios.get('http://13.125.115.145:3085/sensor/Avg_Months/1')
+        axios.get('http://13.125.115.145:3085/sensor/Avg_Months/2')
         .then((res)=>{
           let data = res.data;
           console.log("test--------------------------------")
@@ -447,7 +447,7 @@
         .catch((e)=>{
           console.error(e);
         });
-        axios.get('http://13.125.115.145:3085/sensor/recent_20/1')
+        axios.get('http://13.125.115.145:3085/sensor/recent_20/2')
         .then((res)=>{
           let data = res.data;
           this.recentItems = data;
