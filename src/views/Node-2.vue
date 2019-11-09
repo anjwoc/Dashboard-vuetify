@@ -389,13 +389,13 @@
       '$route' (to, from){
         //경로 변경에 반응해서 실행
         this.$socket.emit('nodeId', '1');
-        onMounted();
+        this.onMounted();
       },
     },
     mounted(){
       this.nodeTitle = (this.$route.path === '/') ? 'node-1' : this.$route.path.slice(1);
       console.log(this.nodeTitle);
-      onMounted();
+      //onMounted();
     },
     methods: {
       complete (index) {
