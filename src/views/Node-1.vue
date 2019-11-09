@@ -450,7 +450,6 @@
         .then(res=>{
           let data = res.data;
           this.nodeStatItems = data;
-          console.log(nodeStatItems);
         })
         .catch(e=>{
           console.error(e);
