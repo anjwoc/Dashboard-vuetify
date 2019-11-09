@@ -60,13 +60,24 @@ export default {
     },
     methods: {
         onChange() {
-            const onoff = this.switch1 ? '1' : '0';
+            const n1 = this.switch1 ? '1' : '0';
+            const n2 = this.switch2 ? '1' : '0';
+            let onoff = 0;
+            if(n1==='0' && n2==='0'){
+                onoff=0
+            }else if(n1==='1' && n2==='0'){
+                onoff=1
+            }else if(n1==='0' && n2==='1'){
+                onoff=2
+            }else if(n1==='1' && n2==='1'){
+                onoff=3
+            }
             const nodeId = (this.$route.path === '/' || '/node-1') ? '0' : '1'
-            
+            console.log(onoff);
             console.log(`nodeId : ${nodeId}`);
-            axios.post('http://localhost:3085/sensor/config', {
+            axios.post('http://13.125.115.145:3085/sensor/config', {
                 'onoff': onoff,
-                'nodeId': this.$route.path,
+                'nodeId': nodeId,
             },{
                 withCredentials: true,
             })

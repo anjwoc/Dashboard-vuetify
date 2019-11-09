@@ -54,13 +54,12 @@ export default {
     },
     methods: {
         onChange() {
-            const onoff = this.switch1 ? '1' : '0';
+            const onoff = this.switch1 ? 1 : 0;
             const nodeId = (this.$route.path === '/' || '/node-1') ? '0' : '1'
-            
             console.log(`nodeId : ${nodeId}`);
-            axios.post('http://localhost:3085/sensor/config', {
+            axios.post('http://13.125.115.145:3085/sensor/config', {
                 'onoff': onoff,
-                'nodeId': this.$route.path,
+                'nodeId': nodeId,
             },{
                 withCredentials: true,
             })
