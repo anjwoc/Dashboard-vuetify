@@ -395,7 +395,7 @@
     mounted(){
       this.nodeTitle = (this.$route.path === '/') ? 'node-1' : this.$route.path.slice(1);
       console.log(this.nodeTitle);
-      //onMounted();
+      this.onMounted();
     },
     methods: {
       complete (index) {

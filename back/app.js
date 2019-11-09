@@ -95,6 +95,15 @@ const getEletricFee = (total) => {
   return fee;
 };
 
+const con = mysql.createConnection({
+  host: 'anjwoc.iptime.org',
+  port: 3306,
+  user: 'root',
+  password: '1234',
+  database: 'dashboard',
+  multipleStatements: true,
+});
+
 let newInterval;
 let interval = [];
 io.on('connection', (socket)=>{
@@ -124,18 +133,13 @@ io.on('connection', (socket)=>{
           let realtimeChartLabels = new Array();
           let electricFee = 0;
           let totalUsage = 0;
-          const sql = `select CONCAT(HOUR(insertedAt), ':', MINUTE(insertedAt), ':', SECOND(insertedAt)) AS time, W from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 MONTH) AND NO=${nodeId} LIMIT 8; `
+          console.log(`내부에서의 노드아이디 ${nodeId}`);
+          const sql = `select CONCAT(HOUR(insertedAt), ':', MINUTE(insertedAt), ':', SECOND(insertedAt)) AS time, W from sensor 
+          where insertedAt > DATE_SUB(now(), INTERVAL 1 MONTH) AND NO=${nodeId} LIMIT 8; `
                 +`select SUM(W) AS W from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 MONTH) AND NO=${nodeId};`
                 +`select SUM(W) AS W from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 DAY) AND NO=${nodeId}`;
           //DB 연동해서 DB로부터 센서값 조회
-          const con = mysql.createConnection({
-              host: 'anjwoc.iptime.org',
-              port: 3306,
-              user: 'root',
-              password: '1234',
-              database: 'dashboard',
-              multipleStatements: true,
-          });
+          
           con.connect();
           con.query(sql,(err, rows, fields)=>{
               if(!err){
