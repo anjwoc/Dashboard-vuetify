@@ -154,7 +154,7 @@ const sensorRouter = (function(io) {
             console.log(onoff);
             const sql = `UPDATE router SET onoff=? WHERE NO=${nodeId};`;
             console.log(sql);
-            con.query(sql,[onoff, nodeId],function(err,rows){
+            con.query(sql,[onoff],function(err,rows){
                 if(err) console.log("err : "+err);
                 console.log(rows);
                 res.json(rows);
