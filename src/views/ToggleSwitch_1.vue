@@ -44,6 +44,12 @@ export default {
         }
     },
     watch: {
+        switch1: function(){
+            this.onChange();
+        },
+        switch2: function(){
+            this.onChange();
+        }
     },
     mounted() {
         this.onMounted();
@@ -66,7 +72,7 @@ export default {
         },
         onChange() {
             const onoff = this.switch1 ? 1 : 0;
-            const nodeId = (this.$route.path === '/' || '/node-1') ? '0' : '1'
+            const nodeId = 0;
             console.log(`nodeId : ${nodeId}`);
             axios.post('http://13.125.115.145:3085/sensor/config', {
                 'onoff': onoff,
