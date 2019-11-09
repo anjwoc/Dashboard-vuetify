@@ -64,8 +64,18 @@ export default {
             .then((res)=>{
                 console.log("Toggle---------------------------");
                 let str = res.data[0].onoff.toString(2);
-                this.switch1 = str[0] === '0' ? false : true;
-                this.switch2 = str[1] === '0' ? false : true;
+
+                parse = (str) => {
+                    let a = str[0] === '0' ? false : true;
+                    let b = str[1] === '0' ? false : true;
+
+                    this.switch1 = a;
+                    this.switch2 = b;   
+                }
+                
+                parse(str);
+                //this.switch1 = str[0] === '0' ? false : true;
+                //this.switch2 = str[1] === '0' ? false : true;
             })
         },
         onChange() {
