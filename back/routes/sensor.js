@@ -159,6 +159,7 @@ const sensorRouter = (function(io) {
                 console.log(rows);
                 res.json(rows);
             });
+            con.end();
 
         }catch(err){
             console.error(err);
@@ -185,6 +186,7 @@ const sensorRouter = (function(io) {
                     console.log('Error while performing Query. ', err);
                 }
             })
+            con.end();
         }catch(err){
             console.error(err);
             return next(err);
@@ -213,6 +215,7 @@ const sensorRouter = (function(io) {
                     console.log('Error while performing Query. ', err);
                 }
             })
+            con.end();
         }catch(err){
             console.error(err);
             return next(err);
@@ -245,7 +248,7 @@ const sensorRouter = (function(io) {
                 else
                     console.log('Error while performing Query. ', err);
             })
-            
+            con.end();
         }catch(err){
             console.error(err);
             return next(err);
