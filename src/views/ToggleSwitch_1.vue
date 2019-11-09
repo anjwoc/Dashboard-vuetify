@@ -29,11 +29,7 @@
         color="primary"
         ></v-switch>
     </v-card-actions>
-    <v-row class="ma-0 pa-0 justify-center">
-            <div class="ma-0 pa-0">
-                <v-btn text large color="primary" @click="onChange">설정 변경</v-btn>
-            </div>
-    </v-row>
+    
   </v-card>
 </template>
 <script>
@@ -50,20 +46,27 @@ export default {
     watch: {
     },
     mounted() {
-        
+        this.onMounted();
     },
     methods: {
         onMounted(){
             axios.get(`http://13.125.115.145:3085/sensor/getToggleSwitch/0`)
             .then((res)=>{
                 console.log("Toggle---------------------------");
-                let str = res.data[0].onoff.toString() === '0'? false:true;
-                this.switch1 = str;
+                let str = res.data.toString(2);
+                console.log("stsstssatasdtsatssad");
+                console.log(str);
+                let a = str[0] === '0' ? false : true;
+                let b = str[1] === '0' ? false : true;
+                
+                
+                this.switch1 = a;
+                this.switch2 = b;
             })
         },
         onChange() {
             const onoff = this.switch1 ? 1 : 0;
-            const nodeId = 0
+            const nodeId = (this.$route.path === '/' || '/node-1') ? '0' : '1'
             console.log(`nodeId : ${nodeId}`);
             axios.post('http://13.125.115.145:3085/sensor/config', {
                 'onoff': onoff,

@@ -33,13 +33,7 @@
         label="제어2"
         color="primary"
         ></v-switch>
-
     </v-card-actions>
-    <v-row class="ma-0 pa-0 justify-center">
-            <div class="ma-0 pa-0">
-                <v-btn text large color="primary" @click="onChange">설정 변경</v-btn>
-            </div>
-    </v-row>
   </v-card>
 </template>
 <script>
@@ -54,6 +48,12 @@ export default {
         }
     },
     watch: {
+        switch1: function(){
+            this.onChange();
+        },
+        switch2: function(){
+            this.onChange();
+        }
     },
     mounted() {
         this.onMounted();
@@ -63,19 +63,19 @@ export default {
             axios.get(`http://13.125.115.145:3085/sensor/getToggleSwitch/1`)
             .then((res)=>{
                 console.log("Toggle---------------------------");
-                let str = res.data[0].onoff.toString(2);
-
-                parse = (str) => {
-                    let a = str[0] === '0' ? false : true;
-                    let b = str[1] === '0' ? false : true;
-
-                    this.switch1 = a;
-                    this.switch2 = b;   
-                }
+                let str = res.data.toString();
+                if(str === '1') str='10';
+                if(str === '0') str='00';
+                if(str === '2') str='01';
+                if(str === '3') str='11';
                 
-                parse(str);
-                //this.switch1 = str[0] === '0' ? false : true;
-                //this.switch2 = str[1] === '0' ? false : true;
+                console.log(`asdfsadfsadfasfas: ${str}`)
+                let a = str[0] === '0' ? false : true;
+                let b = str[1] === '0' ? false : true;
+                console.log(`a: ${a} b: ${b}`);
+                
+                this.switch1 = a;
+                this.switch2 = b;
             })
         },
         onChange() {
