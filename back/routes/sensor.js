@@ -5,19 +5,19 @@ const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 const router = express.Router();
 
 const sensorRouter = (function(io) {
-    const con = mysql.createConnection({
-        host: 'anjwoc.iptime.org',
-        port: 3306,
-        user: 'root',
-        password: '1234',
-        database: 'dashboard'
-    });
+    
 
     router.get('/', async (req, res, next)=>{
         try{
             let arr = new Array();
             //DB 연동해서 DB로부터 센서값 조회
-
+            const con = mysql.createConnection({
+                host: 'anjwoc.iptime.org',
+                port: 3306,
+                user: 'root',
+                password: '1234',
+                database: 'dashboard'
+            });
             con.connect();
             const query = `select CONCAT(HOUR(insertedAt), '시', MINUTE(insertedAt), '분') AS time, W from sensor 
             where insertedAt > DATE_SUB(now(), INTERVAL 8 MINUTE)
@@ -41,7 +41,13 @@ const sensorRouter = (function(io) {
     
     router.get('/24h/:nodeId', async (req, res, next)=>{
         try{
-
+            const con = mysql.createConnection({
+                host: 'anjwoc.iptime.org',
+                port: 3306,
+                user: 'root',
+                password: '1234',
+                database: 'dashboard'
+            });
             con.connect();
             const nodeId = req.params.nodeId;
             const query = `select * from sensor 
@@ -63,7 +69,13 @@ const sensorRouter = (function(io) {
     });
     router.get('/sum_24h/:nodeId', async (req, res, next)=>{
         try{
-
+            const con = mysql.createConnection({
+                host: 'anjwoc.iptime.org',
+                port: 3306,
+                user: 'root',
+                password: '1234',
+                database: 'dashboard'
+            });
             const nodeId = req.params.nodeId;
             const query = `select mac, sum(W) AS W from sensor 
             where insertedAt > DATE_ADD(NOW(), INTERVAL -24 HOUR) AND NO=${nodeId} 
@@ -87,7 +99,13 @@ const sensorRouter = (function(io) {
     
     router.get('/acc_1m/:nodeId', async (req, res, next)=>{
         try{
-
+            const con = mysql.createConnection({
+                host: 'anjwoc.iptime.org',
+                port: 3306,
+                user: 'root',
+                password: '1234',
+                database: 'dashboard'
+            });
             con.connect();
             const nodeId = req.params.nodeId;
             const query = `
@@ -124,6 +142,13 @@ const sensorRouter = (function(io) {
     
     router.post('/config', async(req, res, next)=>{
         try{
+            const con = mysql.createConnection({
+                host: 'anjwoc.iptime.org',
+                port: 3306,
+                user: 'root',
+                password: '1234',
+                database: 'dashboard'
+            });
             const onoff = req.body.onoff;
             const nodeId = req.body.nodeId;
             console.log(onoff);
@@ -144,7 +169,13 @@ const sensorRouter = (function(io) {
 
     router.get('/nodeStat', async (req, res, next)=>{
         try{
-
+            const con = mysql.createConnection({
+                host: 'anjwoc.iptime.org',
+                port: 3306,
+                user: 'root',
+                password: '1234',
+                database: 'dashboard'
+            });
             const query = `SELECT DISTINCT(mac) FROM sensor;`;
             con.query(query, (err, rows, fields)=>{
                 if(!err){
@@ -162,7 +193,13 @@ const sensorRouter = (function(io) {
 
     router.get('/recent_20/:nodeId', async (req, res, next)=>{
         try{
-            
+            const con = mysql.createConnection({
+                host: 'anjwoc.iptime.org',
+                port: 3306,
+                user: 'root',
+                password: '1234',
+                database: 'dashboard'
+            });
             const nodeId = req.params.nodeId;
             const query = `SELECT * FROM sensor 
             WHERE NO=${nodeId}
@@ -184,7 +221,13 @@ const sensorRouter = (function(io) {
 
     router.get('/Avg_Months/:nodeId', async(req, res, next)=>{
         try{
-
+            const con = mysql.createConnection({
+                host: 'anjwoc.iptime.org',
+                port: 3306,
+                user: 'root',
+                password: '1234',
+                database: 'dashboard'
+            });
             con.connect();
             const nodeId = req.params.nodeId;
             const query = `SELECT A.dt, A.total_usage/1000 AS kw FROM (
