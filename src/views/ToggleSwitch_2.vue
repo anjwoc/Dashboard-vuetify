@@ -72,7 +72,7 @@ export default {
             }else if(n1==='1' && n2==='1'){
                 onoff=3
             }
-            const nodeId = (this.$route.path === '/' || '/node-1') ? '0' : '1'
+            const nodeId = 1;
             console.log(onoff);
             console.log(`nodeId : ${nodeId}`);
             axios.post('http://13.125.115.145:3085/sensor/config', {
