@@ -234,7 +234,7 @@
               tension: 0
             }),
             low: 0,
-            high: 3000, 
+            high: 200, 
             chartPadding: {
               top: 0,
               right: 0,
