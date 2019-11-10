@@ -237,11 +237,11 @@ const sensorRouter = (function(io) {
             con.connect();
             const nodeId = req.params.nodeId;
             const query = `SELECT A.dt, A.total_usage/1000 AS kw FROM (
-                      SELECT insertedAt, CONCAT(YEAR(insertedAt), '-', MONTH(insertedAt)) AS dt, SUM(w) AS total_usage FROM sensor
+                      SELECT insertedAt, MONTH(insertedAt) AS dt, SUM(w) AS total_usage FROM sensor
                       WHERE NO=${nodeId}
                       GROUP BY MONTH(insertedAt)
                       HAVING YEAR(insertedAt) = YEAR(DATE(NOW()))
-                )A`;
+                )A ORDER BY A.dt ASC`;
 
             con.query(query, (err, rows, fields)=>{
                 if(!err){
