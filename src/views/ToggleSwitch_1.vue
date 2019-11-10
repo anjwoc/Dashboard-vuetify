@@ -60,7 +60,7 @@ export default {
             .then((res)=>{
                 console.log("Toggle---------------------------");
                 let str = res.data;
-                this.switch1 === 0 ? false : true;
+                let a = str === 0 ? false : true;
                 this.switch1 = a;
             })
         },

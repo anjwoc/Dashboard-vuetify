@@ -273,7 +273,7 @@ const sensorRouter = (function(io) {
             con.query(query, (err, rows, fields)=>{
                 if(!err){
                     console.log('The solution is: ', rows);
-                    res.json(rows);
+                    res.json(rows[0].onoff);
                 }else{
                     console.log('Error while performing Query. ', err);
                 }
