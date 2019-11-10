@@ -120,11 +120,11 @@ io.sockets.on('connection', (socket)=>{
                 +`select SUM(W) AS W from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 DAY) AND NO=${nodeId};`;
           //DB 연동해서 DB로부터 센서값 조회
           const con = mysql.createConnection({
-              host: 'process.env.DB_HOST',
-              port: 3306,
-              user: 'process.env.DB_USER',
-              password: 'process.env.DB_PASSWORD',
-              database: 'process.env.DB_NAME',
+              host: process.env.DB_HOST,
+              port: process.env.DB_PORT,
+              user: process.env.DB_USER,
+              password: process.env.DB_PASSWORD,
+              database: process.env.DB_NAME,
               multipleStatements: true,
           });
           con.connect();
@@ -184,11 +184,11 @@ io.sockets.on('connection', (socket)=>{
                 +`select SUM(W) AS W from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 DAY) AND NO=${nodeId};`;
           //DB 연동해서 DB로부터 센서값 조회
           const con = mysql.createConnection({
-              host: 'process.env.DB_HOST',
-              port: 3306,
-              user: 'process.env.DB_NAME',
-              password: 'process.env.DB_PASSWORD',
-              database: 'process.env.DB_NAME',
+              host: process.env.DB_HOST,
+              port: process.env.DB_PORT,
+              user: process.env.DB_NAME,
+              password: process.env.DB_PASSWORD,
+              database: process.env.DB_NAME,
               multipleStatements: true,
           });
           con.connect();
