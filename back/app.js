@@ -26,8 +26,8 @@ app.use(helmet());
 app.use(hpp());
 app.use(morgan('combined'));
 app.use(cors({
-  //origin: 'http://delog.net',
-  origin: 'http://15.164.132.151',
+  origin: 'http://delog.net',
+  //origin: 'http://15.164.132.151',
   credentials: true,
 }));
 
@@ -159,7 +159,7 @@ io.sockets.on('connection', (socket)=>{
             console.error(err);
             return next(err);
         };
-      },2000);
+      },4000);
 
       intervalArr.push({'nodeId': nodeId, 'socketId': socketId, 'intervalObj': interval});
     }else{
@@ -180,7 +180,7 @@ io.sockets.on('connection', (socket)=>{
           let electricFee = 0;
           let totalUsage = 0;
           const sql = `select CONCAT(HOUR(insertedAt), ':', MINUTE(insertedAt), ':', SECOND(insertedAt)) AS time, W from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 MONTH) AND NO=${nodeId} LIMIT 8; `
-                +`select SUM(W) AS W from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 MONTH) AND NO=${nodeId};`
+                +`select SUM(W)/COUNT(W) AS W from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 MONTH) AND NO=${nodeId};`
                 +`select SUM(W) AS W from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 DAY) AND NO=${nodeId};`;
           //DB 연동해서 DB로부터 센서값 조회
           const con = mysql.createConnection({
@@ -223,7 +223,7 @@ io.sockets.on('connection', (socket)=>{
             console.error(err);
             return next(err);
         };
-      },2000);
+      },4000);
       intervalArr[idx] = {'nodeId': nodeId, 'socketId': socketId, 'intervalObj': interval};
     }
   });
