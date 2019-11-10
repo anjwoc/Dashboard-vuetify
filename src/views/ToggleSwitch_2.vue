@@ -69,10 +69,8 @@ export default {
                 if(str === '2') str='01';
                 if(str === '3') str='11';
                 
-                console.log(`asdfsadfsadfasfas: ${str}`)
                 let a = str[0] === '0' ? false : true;
                 let b = str[1] === '0' ? false : true;
-                console.log(`a: ${a} b: ${b}`);
                 
                 this.switch1 = a;
                 this.switch2 = b;

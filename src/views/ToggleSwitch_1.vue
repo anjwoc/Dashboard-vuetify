@@ -59,15 +59,9 @@ export default {
             axios.get(`http://13.125.115.145:3085/sensor/getToggleSwitch/0`)
             .then((res)=>{
                 console.log("Toggle---------------------------");
-                let str = res.data.toString(2);
-                console.log("stsstssatasdtsatssad");
-                console.log(str);
-                let a = str[0] === '0' ? false : true;
-                let b = str[1] === '0' ? false : true;
-                
-                
+                let str = res.data;
+                this.switch1 === 0 ? false : true;
                 this.switch1 = a;
-                this.switch2 = b;
             })
         },
         onChange() {

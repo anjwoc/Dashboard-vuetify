@@ -28,7 +28,7 @@
       </v-list-item-avatar>
 
       <v-list-item-title class="title">
-        DASHBOARD
+        사용자 모니터링
       </v-list-item-title>
     </v-list-item>
 
