@@ -1,8 +1,11 @@
 const express = require('express');
 const mysql = require('mysql');
 const db = require('../models');
+const dotenv = require('dotenv');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 const router = express.Router();
+
+dotenv.config();
 
 const sensorRouter = (function(io) {
     
@@ -12,11 +15,11 @@ const sensorRouter = (function(io) {
             let arr = new Array();
             //DB 연동해서 DB로부터 센서값 조회
             const con = mysql.createConnection({
-                host: 'anjwoc.iptime.org',
-                port: 3306,
-                user: 'root',
-                password: '1234',
-                database: 'dashboard'
+                host: process.env.DB_HOST,
+                port: process.env.DB_PORT,
+                user: process.env.DB_NAME,
+                password: process.env.DB_PASSWORD,
+                database: process.env.DB_NAME
             });
             con.connect();
             const query = `select CONCAT(HOUR(insertedAt), '시', MINUTE(insertedAt), '분') AS time, W from sensor 
@@ -42,11 +45,11 @@ const sensorRouter = (function(io) {
     router.get('/24h/:nodeId', async (req, res, next)=>{
         try{
             const con = mysql.createConnection({
-                host: 'anjwoc.iptime.org',
-                port: 3306,
-                user: 'root',
-                password: '1234',
-                database: 'dashboard'
+                host: process.env.DB_HOST,
+                port: process.env.DB_PORT,
+                user: process.env.DB_NAME,
+                password: process.env.DB_PASSWORD,
+                database: process.env.DB_NAME
             });
             con.connect();
             const nodeId = req.params.nodeId;
@@ -70,11 +73,11 @@ const sensorRouter = (function(io) {
     router.get('/sum_24h/:nodeId', async (req, res, next)=>{
         try{
             const con = mysql.createConnection({
-                host: 'anjwoc.iptime.org',
-                port: 3306,
-                user: 'root',
-                password: '1234',
-                database: 'dashboard'
+                host: process.env.DB_HOST,
+                port: process.env.DB_PORT,
+                user: process.env.DB_NAME,
+                password: process.env.DB_PASSWORD,
+                database: process.env.DB_NAME
             });
             const nodeId = req.params.nodeId;
             const query = `select mac, sum(W) AS W from sensor 
@@ -100,11 +103,11 @@ const sensorRouter = (function(io) {
     router.get('/acc_1m/:nodeId', async (req, res, next)=>{
         try{
             const con = mysql.createConnection({
-                host: 'anjwoc.iptime.org',
-                port: 3306,
-                user: 'root',
-                password: '1234',
-                database: 'dashboard'
+                host: process.env.DB_HOST,
+                port: process.env.DB_PORT,
+                user: process.env.DB_NAME,
+                password: process.env.DB_PASSWORD,
+                database: process.env.DB_NAME
             });
             con.connect();
             const nodeId = req.params.nodeId;
@@ -143,11 +146,11 @@ const sensorRouter = (function(io) {
     router.post('/config', async(req, res, next)=>{
         try{
             const con = mysql.createConnection({
-                host: 'anjwoc.iptime.org',
-                port: 3306,
-                user: 'root',
-                password: '1234',
-                database: 'dashboard'
+                host: process.env.DB_HOST,
+                port: process.env.DB_PORT,
+                user: process.env.DB_NAME,
+                password: process.env.DB_PASSWORD,
+                database: process.env.DB_NAME
             });
             const onoff = req.body.onoff;
             const nodeId = req.body.nodeId;
@@ -171,11 +174,11 @@ const sensorRouter = (function(io) {
     router.get('/nodeStat', async (req, res, next)=>{
         try{
             const con = mysql.createConnection({
-                host: 'anjwoc.iptime.org',
-                port: 3306,
-                user: 'root',
-                password: '1234',
-                database: 'dashboard'
+                host: process.env.DB_HOST,
+                port: process.env.DB_PORT,
+                user: process.env.DB_NAME,
+                password: process.env.DB_PASSWORD,
+                database: process.env.DB_NAME
             });
             const query = `SELECT DISTINCT(mac) FROM sensor;`;
             con.query(query, (err, rows, fields)=>{
@@ -196,11 +199,11 @@ const sensorRouter = (function(io) {
     router.get('/recent_20/:nodeId', async (req, res, next)=>{
         try{
             const con = mysql.createConnection({
-                host: 'anjwoc.iptime.org',
-                port: 3306,
-                user: 'root',
-                password: '1234',
-                database: 'dashboard'
+                host: process.env.DB_HOST,
+                port: process.env.DB_PORT,
+                user: process.env.DB_NAME,
+                password: process.env.DB_PASSWORD,
+                database: process.env.DB_NAME
             });
             const nodeId = req.params.nodeId;
             const query = `SELECT * FROM sensor 
@@ -225,11 +228,11 @@ const sensorRouter = (function(io) {
     router.get('/Avg_Months/:nodeId', async(req, res, next)=>{
         try{
             const con = mysql.createConnection({
-                host: 'anjwoc.iptime.org',
-                port: 3306,
-                user: 'root',
-                password: '1234',
-                database: 'dashboard'
+                host: process.env.DB_HOST,
+                port: process.env.DB_PORT,
+                user: process.env.DB_NAME,
+                password: process.env.DB_PASSWORD,
+                database: process.env.DB_NAME
             });
             con.connect();
             const nodeId = req.params.nodeId;
@@ -258,11 +261,11 @@ const sensorRouter = (function(io) {
     router.get('/getToggleSwitch/:nodeId', async (req, res, next)=>{
         try{
             const con = mysql.createConnection({
-                host: 'anjwoc.iptime.org',
-                port: 3306,
-                user: 'root',
-                password: '1234',
-                database: 'dashboard'
+                host: process.env.DB_HOST,
+                port: process.env.DB_PORT,
+                user: process.env.DB_NAME,
+                password: process.env.DB_PASSWORD,
+                database: process.env.DB_NAME
             });
             
             let nodeId= req.params.nodeId;
