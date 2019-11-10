@@ -307,7 +307,7 @@
               showGrid: false
             },
             low: 0,
-            high: 1000,
+            high: 3000,
             chartPadding: {
               top: 0,
               right: 0,
@@ -447,7 +447,7 @@
         .catch((e)=>{
           console.error(e);
         });
-        axios.get('http://13.125.115.145:3085/sensor/recent_20/2')
+        axios.get('http://13.125.115.145:3085/sensor/recent_20/1')
         .then((res)=>{
           let data = res.data;
           this.recentItems = data;
