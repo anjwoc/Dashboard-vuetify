@@ -410,6 +410,7 @@
             const {mac, W} = data[i];
             console.log("mac, W")
             console.log(mac, W);
+            W = W/1000;
             this.totalUsageEachNodeChart.data['series'][0].push(W);
             this.totalUsageEachNodeChart.data['labels'].push(mac);           
           }

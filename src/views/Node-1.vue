@@ -267,7 +267,7 @@
               showGrid: false
             },
             low: 0,
-            high: 20,
+            high: 300,
             chartPadding: {
               top: 0,
               right: 5,
@@ -398,6 +398,7 @@
           let data = res.data;
           for(let i=0;i<data.length;i++){
             const {mac, W} = data[i];
+            W = W/1000;
             console.log("mac, W")
             console.log(mac, W);
             this.totalUsageEachNodeChart.data['series'][0].push(W);

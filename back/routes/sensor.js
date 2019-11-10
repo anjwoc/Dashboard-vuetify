@@ -120,7 +120,7 @@ const sensorRouter = (function(io) {
                 WHEN DAYOFWEEK(insertedAt) = 6 THEN '금'
                 WHEN DAYOFWEEK(insertedAt) = 7 THEN '토'
             ELSE '오류' END day
-            ,(SUM(W)/COUNT(W))*720 AS 합계 from sensor
+            ,((SUM(W)/COUNT(W))*720)/1000 AS 합계 from sensor
             WHERE MONTH(sensor.insertedAt) = MONTH(NOW()) AND NO=${nodeId}
             group by DAYOFWEEK(insertedAt) -- 요일별 그룹
             ORDER BY (
