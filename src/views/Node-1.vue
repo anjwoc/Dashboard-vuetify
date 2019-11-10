@@ -267,7 +267,7 @@
               showGrid: false
             },
             low: 0,
-            high: 300,
+            high: 150,
             chartPadding: {
               top: 0,
               right: 5,
