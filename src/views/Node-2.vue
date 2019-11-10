@@ -403,7 +403,7 @@
         this.list[index] = !this.list[index]
       },
       onMounted(){
-        axios.get('http://13.125.115.145:3085/sensor/sum_24h/2')
+        axios.get('http://13.125.115.145:3085/sensor/sum_24h/1')
         .then((res)=>{
           let data = res.data;
           for(let i=0;i<data.length;i++){
@@ -419,7 +419,7 @@
         .catch((err)=>{
           console.error(err);
         });
-        axios.get('http://13.125.115.145:3085/sensor/acc_1m/2')
+        axios.get('http://13.125.115.145:3085/sensor/acc_1m/1')
         .then((res)=>{
           let data = res.data;
           for(let i=0;i<data.length;i++){
@@ -433,7 +433,7 @@
         .catch((e)=>{
           console.error(e);
         });
-        axios.get('http://13.125.115.145:3085/sensor/Avg_Months/2')
+        axios.get('http://13.125.115.145:3085/sensor/Avg_Months/1')
         .then((res)=>{
           let data = res.data;
           console.log("test--------------------------------")
