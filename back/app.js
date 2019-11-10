@@ -132,7 +132,7 @@ io.sockets.on('connection', (socket)=>{
               if(!err){
                   const realtime = rows[0]; // 
                   electricFee = getEletricFee(rows[1][0]['W']);
-                  totalUsage = rows[2][0]['W'];
+                  totalUsage = parseInt(rows[2][0]['W']);
                   // console.log("------------nodeID----------");
                   // console.log(nodeId);
                   // console.log("------------realtimee----------");
