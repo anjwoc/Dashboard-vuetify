@@ -116,7 +116,7 @@ io.sockets.on('connection', (socket)=>{
           let electricFee = 0;
           let totalUsage = 0;
           const sql = `select CONCAT(HOUR(insertedAt), ':', MINUTE(insertedAt), ':', SECOND(insertedAt)) AS time, W from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 MONTH) AND NO=${nodeId} LIMIT 8; `
-                +`select SUM(W) AS W from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 MONTH) AND NO=${nodeId};`
+                +`select (SUM(W)/COUNT(W))*720 AS W from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 MONTH) AND NO=${nodeId};`
                 +`select SUM(W) AS W from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 DAY) AND NO=${nodeId};`;
           //DB 연동해서 DB로부터 센서값 조회
           const con = mysql.createConnection({
@@ -133,14 +133,14 @@ io.sockets.on('connection', (socket)=>{
                   const realtime = rows[0]; // 
                   electricFee = getEletricFee(rows[1][0]['W']);
                   totalUsage = rows[2][0]['W'];
-                  console.log("------------nodeID----------");
-                  console.log(nodeId);
-                  console.log("------------realtimee----------");
-                  console.log(realtime);
-                  console.log("------------electricFee----------");
-                  console.log(electricFee);
-                  console.log("------------totalUsage----------");
-                  console.log(totalUsage);
+                  // console.log("------------nodeID----------");
+                  // console.log(nodeId);
+                  // console.log("------------realtimee----------");
+                  // console.log(realtime);
+                  // console.log("------------electricFee----------");
+                  // console.log(electricFee);
+                  // console.log("------------totalUsage----------");
+                  // console.log(totalUsage);
                   for(let i=0;i<rows[0].length;i++){
                     let { time, W } = realtime[i];
                     realtimeChartLabels.push(time);
@@ -159,7 +159,7 @@ io.sockets.on('connection', (socket)=>{
             console.error(err);
             return next(err);
         };
-      },4000);
+      },5000);
 
       intervalArr.push({'nodeId': nodeId, 'socketId': socketId, 'intervalObj': interval});
     }else{
@@ -170,8 +170,6 @@ io.sockets.on('connection', (socket)=>{
         }
       }
       clearInterval(intervalArr[idx].intervalObj);
-      console.log("nodeid----------------");
-      console.log(nodeId);
       const interval = setInterval(()=>{
         try{
           
@@ -197,14 +195,14 @@ io.sockets.on('connection', (socket)=>{
                   const realtime = rows[0]; // 
                   electricFee = getEletricFee(rows[1][0]['W']);
                   totalUsage = rows[2][0]['W'];
-                  console.log("------------nodeID----------");
-                  console.log(nodeId);
-                  console.log("------------realtimee----------");
-                  console.log(realtime);
-                  console.log("------------electricFee----------");
-                  console.log(electricFee);
-                  console.log("------------totalUsage----------");
-                  console.log(totalUsage);
+                  // console.log("------------nodeID----------");
+                  // console.log(nodeId);
+                  // console.log("------------realtimee----------");
+                  // console.log(realtime);
+                  // console.log("------------electricFee----------");
+                  // console.log(electricFee);
+                  // console.log("------------totalUsage----------");
+                  // console.log(totalUsage);
                   for(let i=0;i<rows[0].length;i++){
                     let { time, W } = realtime[i];
                     realtimeChartLabels.push(time);
@@ -223,7 +221,7 @@ io.sockets.on('connection', (socket)=>{
             console.error(err);
             return next(err);
         };
-      },4000);
+      },5000);
       intervalArr[idx] = {'nodeId': nodeId, 'socketId': socketId, 'intervalObj': interval};
     }
   });
