@@ -178,7 +178,7 @@ io.sockets.on('connection', (socket)=>{
           let electricFee = 0;
           let totalUsage = 0;
           const sql = `select CONCAT(HOUR(insertedAt), ':', MINUTE(insertedAt), ':', SECOND(insertedAt)) AS time, W from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 MONTH) AND NO=${nodeId} LIMIT 8; `
-                +`select SUM(W)/COUNT(W) AS W from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 MONTH) AND NO=${nodeId};`
+                +`select (SUM(W)/COUNT(W))*720 AS W from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 MONTH) AND NO=${nodeId};`
                 +`select SUM(W) AS W from sensor where insertedAt > DATE_SUB(now(), INTERVAL 1 DAY) AND NO=${nodeId};`;
           //DB 연동해서 DB로부터 센서값 조회
           const con = mysql.createConnection({
@@ -194,7 +194,7 @@ io.sockets.on('connection', (socket)=>{
               if(!err){
                   const realtime = rows[0]; // 
                   electricFee = getEletricFee(rows[1][0]['W']);
-                  totalUsage = rows[2][0]['W'];
+                  totalUsage = parseInt(rows[2][0]['W']);
                   // console.log("------------nodeID----------");
                   // console.log(nodeId);
                   // console.log("------------realtimee----------");
