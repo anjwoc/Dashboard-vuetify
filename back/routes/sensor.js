@@ -81,7 +81,7 @@ const sensorRouter = (function(io) {
             });
             const nodeId = req.params.nodeId;
             const query = `select mac, sum(W) AS W from sensor 
-            where insertedAt > DATE_ADD(NOW(), INTERVAL -24 HOUR) AND NO=${nodeId} 
+            where insertedAt > DATE_SUB(NOW(), INTERVAL -24 HOUR) AND NO=${nodeId} 
             group by mac 
             ORDER BY mac ASC;`
             con.connect();
