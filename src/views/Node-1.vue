@@ -147,7 +147,7 @@
           icon="mdi-flash"
           title="electricity usage"
           v-model="this.totalUsage_mA"
-          small-value="mA"
+          small-value="A"
           sub-icon="mdi-flash"
           sub-icon-color="error"
           sub-text="일일 누적 전기 사용량"
