@@ -45,7 +45,7 @@
             
           </h4>
           <p class="category d-inline-flex font-weight-light">
-            이번 년도 월별 총 사용량<br/>( 1월~12월 )
+            이번 년도 월별 총 사용량<br/>( 1월~12월 )<br/>[ 단위: KW ]
           </p>
 
           <template v-slot:actions>
@@ -298,7 +298,7 @@
               showGrid: false
             },
             low: 0,
-            high: 250,
+            high: 330,
             chartPadding: {
               top: 0,
               right: 0,
