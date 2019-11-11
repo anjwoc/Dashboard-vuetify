@@ -133,14 +133,14 @@ io.sockets.on('connection', (socket)=>{
                   const realtime = rows[0]; // 
                   electricFee = getEletricFee(rows[1][0]['W']);
                   totalUsage = parseInt(rows[2][0]['W']);
-                  // console.log("------------nodeID----------");
-                  // console.log(nodeId);
-                  // console.log("------------realtimee----------");
-                  // console.log(realtime);
-                  // console.log("------------electricFee----------");
-                  // console.log(electricFee);
-                  // console.log("------------totalUsage----------");
-                  // console.log(totalUsage);
+                  console.log("------------nodeID----------");
+                  console.log(nodeId);
+                  console.log("------------realtimee----------");
+                  console.log(realtime);
+                  console.log("------------electricFee----------");
+                  console.log(electricFee);
+                  console.log("------------totalUsage----------");
+                  console.log(totalUsage);
                   for(let i=0;i<rows[0].length;i++){
                     let { time, W } = realtime[i];
                     realtimeChartLabels.push(time);
@@ -195,14 +195,14 @@ io.sockets.on('connection', (socket)=>{
                   const realtime = rows[0]; // 
                   electricFee = getEletricFee(rows[1][0]['W']);
                   totalUsage = parseInt(rows[2][0]['W']);
-                  // console.log("------------nodeID----------");
-                  // console.log(nodeId);
-                  // console.log("------------realtimee----------");
-                  // console.log(realtime);
-                  // console.log("------------electricFee----------");
-                  // console.log(electricFee);
-                  // console.log("------------totalUsage----------");
-                  // console.log(totalUsage);
+                  console.log("------------nodeID----------");
+                  console.log(nodeId);
+                  console.log("------------realtimee----------");
+                  console.log(realtime);
+                  console.log("------------electricFee----------");
+                  console.log(electricFee);
+                  console.log("------------totalUsage----------");
+                  console.log(totalUsage);
                   for(let i=0;i<rows[0].length;i++){
                     let { time, W } = realtime[i];
                     realtimeChartLabels.push(time);
