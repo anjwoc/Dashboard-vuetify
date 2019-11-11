@@ -138,7 +138,7 @@
           title="Real-time electric Fee"
           v-model="this.fee"
           sub-icon="mdi-square-inc-cash"
-          sub-text="이번 달 전기요금(누적)"
+          sub-text="이번 달 전기요금(현재 사용량을 유지할 경우 나오는 예상치)"
         >
         </material-stats-card>
       </v-col>
@@ -153,7 +153,7 @@
           icon="mdi-flash"
           title="electricity usage"
           v-model="this.totalUsage_mA"
-          small-value="A"
+          small-value="W"
           sub-icon="mdi-flash"
           sub-icon-color="error"
           sub-text="일일 누적 전기 사용량"
