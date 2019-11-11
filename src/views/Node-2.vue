@@ -354,13 +354,13 @@
           {
             sortable: false,
             text: 'A',
-            value: 'A',
+            value: 'a',
             align: 'right'
           },
           {
             sortable: false,
             text: 'W',
-            value: 'W',
+            value: 'w',
             align: 'right'
           }
         ],
